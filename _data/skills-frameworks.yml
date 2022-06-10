@@ -5,29 +5,23 @@
 # - name: Framework
 #   weight: 5
 
-- name: Angular
-  weight: 5
-
-- name: AngularJS
-  weight: 3
-
-- name: React
-  weight: 4
-
-- name: Node
+- name: Cryptography
   weight: 1
 
-- name: Flutter
+- name: Blockchain
   weight: 2
 
-- name: Express
+- name: Penetration testing
+  weight: 4
+
+- name: Vulnerability Analysis
+  weight: 2
+
+- name: Black Hat Hacking
+  weight: 2
+
+- name: Web Application Security
   weight: 3
 
-- name: Django
+- name: OWASP Top Ten
   weight: 1
-
-- name: Spring
-  weight: 2
-
-- name: Rails
-  weight: 4

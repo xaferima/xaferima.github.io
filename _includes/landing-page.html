@@ -1,14 +1,6 @@
 <div id="landing">
   <div class="landing-title">
-    <h1>Hi, I&#39;m
-      <span class="highlight-title">{{site.username}}</span>,
-    </h1>
-    <h1>
-      <span id="txt-rotate" data-period="2000"
-        data-rotate='["{{site.typing_text}}", "scroll down for more."]'
-      >
-      </span>
-    </h1>
+
     <div class="landing-icons">
       {% if site.email != null %}
         <a class="social-link email" aria-label="My E-Mail" href="mailto:{{site.email}}">
@@ -100,9 +92,33 @@
               <use x="12" y="12" width="24" height="24" viewBox="0 0 48 48" xlink:href="{{ "/assets/img/brands.svg#twitter" | prepend: site.baseurl }}"></use>
             </svg>
           </div>
-          <span class="label">Twitter</span>
+          <span class="label">Twitter</span> 
         </a>
       {% endif %}
+
+
+      {% if site.tryhackme_username != null %}
+        <a class="social-link tryhackme" aria-label="My tryhackme" target="_blank"
+          rel="noreferrer"  href="https://tryhackme.com/p/{{site.tryhackme_username}}">
+          <svg viewBox="0 0 200 200" class="circle">
+            <circle cx="100" cy="100" r="80" />
+          </svg>
+          <div class="social">
+            <img  x="12" y="12" width="24" height="24" viewBox="0 0 48 48" src = "/assets/img/thm2.svg" alt="My thm SVG"/>
+          </div>
+          <span class="label">TryHackMe</span>
+        </a>
+      {% endif %}
+
     </div>
+        <h1>Hi, I&#39;m
+      <span class="highlight-title">{{site.username}}</span>,
+    </h1>
+    <h1>
+      <span id="txt-rotate" data-period="2000"
+        data-rotate='["{{site.typing_text}}", "scroll down for more."]'
+      >
+      </span>
+    </h1>
   </div>
 </div>

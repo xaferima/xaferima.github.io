@@ -17,45 +17,68 @@
 #     - tag: Rails
 #   timeline-side: right
 
-- title: airbnb
-  title-url: https://example.com/
-  date: Sep 2019 - Present
-  subtitle: Fullstack Developer
+- title: CERN
+  title-url: https://home.cern/
+  date: April 2021 - May 2022
+  subtitle: Computer Science Engineer
   tags:
-    - tag: React
-    - tag: Javascript
-    - tag: Ruby
-    - tag: Rails
+    - tag: Web penetration testing
+    - tag: Ethical hacking
   timeline-side: right
 
-- title: Google
-  title-url: https://example.com/
-  date: Mar 2019 - Sep 2019
-  subtitle: Software Engineer as Intern
+- title: Private 
+  title-url: 
+  date: December 2017 - Ongoing
+  subtitle: Consulting in IT Security
   tags:
-    - tag: Flutter
-    - tag: Dart
-    - tag: Keycloak
+    - tag: Security researcher
+    - tag: Trainer
+    - tag: Bug bounty hunter
   timeline-side: right
 
-- title: Super University
-  title-url: https://example.com/
-  date: 2017 - 2019
-  subtitle: M.Sc. Computer Science
+- title: UTPL
+  title-url: https://www.utpl.edu.ec/
+  date: 2017 - Ongoing
+  subtitle: Administration and Public Management
   timeline-side: left
 
-- title: Facebook
-  title-url: https://example.com/
-  date: Sep 2017 - Mar 2019
-  subtitle: Front-End Developer as Intern
+- title: Universidad de Cuenca
+  title-url: https://www.ucuenca.edu.ec/
+  date: 2018 - 2021
+  subtitle: Cyber Security Researcher
   tags:
-    - tag: React
-    - tag: Node
-    - tag: Javascript
+    - tag: White-Black box hacking
+    - tag: Zero-day attacks
   timeline-side: right
 
-- title: Super University
-  title-url: https://example.com/
-  date: 2014 - 2017
-  subtitle: B.A. Computer Science
+
+- title: Universidad Nacional de Loja
+  title-url: https://www.unl.edu.ec/
+  date: 2018 - 2019
+  subtitle: Professor
+  tags:
+    - tag: Teaching
+    - tag: Research experience
+  timeline-side: right
+
+- title: University of Birmingham
+  title-url: https://www.birmingham.ac.uk/postgraduate/courses/taught/computer-science/cyber-security.aspx
+  date: 2016 - 2017
+  subtitle: MSc Cyber Security with Distinction
+  timeline-side: left
+
+
+- title: Universidad de Cuenca
+  title-url: https://www.ucuenca.edu.ec/
+  date: 2014 - 2016
+  subtitle: Software developer
+  tags:
+    - tag: Frontent - Angular JS
+    - tag: Backend - java
+  timeline-side: right
+
+- title: Universidad de Cuenca
+  title-url: https://www.ucuenca.edu.ec/
+  date: 2008 - 2014
+  subtitle: BSc in Computer Science and Engineering
   timeline-side: left
