@@ -5,32 +5,29 @@
 # - name: Git
 #   weight: 5
 
-- name: Git
+- name: Burp suite
   weight: 5
 
-- name: Bash
+- name: Metasploit
   weight: 3
 
-- name: Scrum
-  weight: 3
-
-- name: Travis CI
-  weight: 1
-
-- name: Jenkins
-  weight: 1
-
-- name: Chrome DevTools
-  weight: 2
-
-- name: npm
-  weight: 2
-
-- name: gulp
+- name: Nmap
   weight: 4
 
-- name: VS Code
+- name: SQLmap
+  weight: 2
+
+- name: OWASP Zap
   weight: 3
 
-- name: Postman
-  weight: 4
+- name: Nessus
+  weight: 2
+
+- name: Wireshark
+  weight: 1
+
+- name: Dirbuster,FFuF
+  weight: 2
+
+- name: Dorks(Google, github, etc)
+  weight: 1
