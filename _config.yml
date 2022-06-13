@@ -71,6 +71,17 @@ show_os_projects: false
 # os_projects_title: The will be displayed as the title of your open source projects
 os_projects_title: Open Source Projects
 
+# PAPERS SECTION
+# show_PAPERS_card:
+# > setting this to true, will display the PAPERS section
+# > setting this to false, will omit theP APERS section
+show_papers_card: false
+# about_me_title: The will be displayed as the title in the About Me section
+papers_title: s
+# about_me_description: This will be displayed under the title.
+papers_description: sI am a Computer Science engineer interested and enthusiastic about everything that entails cybersecurity, especially in offensive security. A skilled professional with around 8 years of IT experience, and 4+ years in the Cybersecurity area.<br> <br>Strong skills in offensive security for penetration testing including reconnaissance, OSINT, vulnerability identification, exploitation, automation, etc. Seasoned interpersonal skills, strong work ethics, and ability to work with different groups in both languages English and Spanish.
+
+
 # CONTACT SECTION
 # show_contact_card:
 # > setting this to true, will display the Contact section
