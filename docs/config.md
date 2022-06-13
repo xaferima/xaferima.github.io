@@ -67,6 +67,17 @@
   * setting this to **false**, will omit your public projects on github
 * `os_projects_title`: The will be displayed as the title of your open source projects
 
+
+## Papers Section
+
+* `show_papers_card`:
+  * setting this to **true**, will display the PAPERS Me section
+  * setting this to **false**, will omit the PAPERS Me section
+* `papers_title`: The will be displayed as the title in the About Me section
+* `papers_description`: This will be displayed under the title.
+  * You can add and style website links with this HTML template inside every **section_description**, e.g. checkout the current `about_me_description`:
+
+
 ## Contact Section
 
 * `show_contact_card`:

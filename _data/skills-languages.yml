@@ -14,7 +14,7 @@
 - name: Virtualization
   weight: 2
 
-- name: English proficiency
+- name: English IELTS
   weight: 4
 
 - name: CCNA
