@@ -90,7 +90,7 @@ show_contact_card: true
 # contact_title: The will be displayed as the title in the Contact section
 contact_title: Contact
 # contact_description: This will be displayed under the title.
-contact_description: Please, contact me for anything related to information security.
+contact_description: Please, contact me for anything related to information security. <br><center><script src="https://tryhackme.com/badge/269565"></script><center>
 
 # GITHUB-METADATA
 # Set this to your forked repository
