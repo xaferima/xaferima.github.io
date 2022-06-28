@@ -7,12 +7,12 @@ title: XAFERIMA
 description: Personal website powered by Jekyll
 # baseurl: The subpath of your site
 # > set this to "", if you renamed the repository to <user>.github.io
-baseurl: ""
+baseurl: "" 
 # LANDING PAGE
 # username: This will displayed on the landing page as your name.
 username: Xavier Riofrío
 # typing_text: This will be typed before 'scroll down for more'.
-# > set this to your job title, e.g. Fullstack Developer
+
 typing_text: <span>Computer Science Eng, <br> <br> MsC Cyber Security.
 # email: Your E-Mail address for the email button.  
 email: xaferima@gmail.com
@@ -23,6 +23,7 @@ linkedin_username: xaferima
 twitter_username: xaferima
 github_username: 
 tryhackme_username: xaferima
+medium_username: xaferima
 
 # ABOUT ME SECTION
 # show_aboutme_card:
@@ -71,10 +72,26 @@ show_os_projects: false
 # os_projects_title: The will be displayed as the title of your open source projects
 os_projects_title: Open Source Projects
 
+
+
+# POSTS SECTION
+# show_posts_card:
+# > setting this to true, will display the posts section
+# > setting this to false, will omit the posts section
+show_posts_card: true
+# show_posts:
+# > setting this to true, will display your listed posts in _data/posts.yml
+# > setting this to false, will omit your listed posts
+show_posts: true
+# posts_title: The will be displayed as the title of your posts
+posts_title: Personal posts
+
+
+
 # PAPERS SECTION
 # show_PAPERS_card:
 # > setting this to true, will display the PAPERS section
-# > setting this to false, will omit theP APERS section
+# > setting this to false, will omit the PAPERS section
 show_papers_card: false
 # about_me_title: The will be displayed as the title in the About Me section
 papers_title: s
