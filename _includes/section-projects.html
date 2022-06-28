@@ -29,7 +29,7 @@
   {% if site.projects.sort_by == 'stars' %}
     {% assign sort_order = 'stargazers_count', 'last' %}
   {% else %}
-    {% assign sort_order = 'pushed_at' %}
+    {% assign sort_order = 'pushed_at' %} 
   {% endif %}
 
   {% if site.projects.exclude.archived && site.projects.exclude.forks %}
