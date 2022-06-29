@@ -1,0 +1,29 @@
+<h1 class="title">{{site.skills_title_es}}</h1>
+
+
+<div id="skills">
+  <input type="radio" id="all" name="filter" checked />
+  <label class="filter-button neumorphism-button" for="all">Todos</label>
+  <input type="radio" id="framework" name="filter" />
+  <label class="filter-button neumorphism-button" for="framework">Conocimientos</label>
+  <input type="radio" id="tool" name="filter" />
+  <label class="filter-button neumorphism-button" for="tool">Herramientas</label>
+  <input type="radio" id="language" name="filter" />
+  <label class="filter-button neumorphism-button" for="language">Cursos y certificaciones</label>
+
+  {% for framework in site.data.skills-frameworks %}
+    <div skill-type="framework" skill-weight="{{framework.weight}}" data-aos="zoom-in">
+      {{framework.name}}
+    </div>
+  {% endfor %}
+  {% for tool in site.data.skills-tools %}
+    <div skill-type="tool" skill-weight="{{tool.weight}}" data-aos="zoom-in">
+      {{tool.name}}
+    </div>  
+  {% endfor %}  
+  {% for language in site.data.skills-languages %}
+    <div skill-type="language" skill-weight="{{language.weight}}" data-aos="zoom-in">
+      {{language.name}}
+    </div>
+  {% endfor %} 
+</div>

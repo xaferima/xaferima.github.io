@@ -109,7 +109,7 @@ function watchData() {
 
 function watchMarkup() {
   gulp.watch(
-    [ 'index.html', '_includes/*.html', '_layouts/*.html' ],
+    [ 'index.html','index-es.html', '_includes/*.html', '_layouts/*.html' ],
     gulp.series(jekyll, browserSyncReload)
   );
 }

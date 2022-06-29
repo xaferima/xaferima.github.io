@@ -1,0 +1,84 @@
+# > title: Name of your timeline entry, university or work place
+# > title-url: Link to your timeline entry, university or work place
+# > date: Time span
+# > subtitle: The description under the title
+# > tags: List of tags you want to associate with the entry
+# > timeline-side: The side on which you want to display the entry: left or right
+
+# Example of a timeline entry
+# - title: airbnb
+#   title-url: https://example.com/
+#   date: Sep 2019 - Present
+#   subtitle: Fullstack Developer
+#   tags:
+#     - tag: React
+#     - tag: Javascript
+#     - tag: Ruby
+#     - tag: Rails
+#   timeline-side: right
+
+- title: CERN
+  title-url: https://home.cern/
+  date: Abril 2021 - Mayo 2022
+  subtitle: Ingeniero en Computación
+  tags:
+    - tag: Web penetration testing
+    - tag: Ethical hacking
+  timeline-side: right
+
+- title: Privado 
+  title-url: 
+  date: Diciembre 2017 - Presente
+  subtitle: Consultorías en Seguridad Informática
+  tags:
+    - tag: Investigador de seguridad
+    - tag: Capacitador
+    - tag: Bug bounty hunter
+  timeline-side: right
+
+- title: UTPL
+  title-url: https://www.utpl.edu.ec/
+  date: 2017 - Presente
+  subtitle: Administración en gestión pública
+  timeline-side: left
+
+- title: Universidad de Cuenca
+  title-url: https://www.ucuenca.edu.ec/
+  date: 2018 - 2021
+  subtitle: Investigador de Cyber Securidad 
+  tags:
+    - tag: White-Black box hacking
+    - tag: Zero-day attacks
+  timeline-side: right
+
+
+- title: Universidad Nacional de Loja
+  title-url: https://www.unl.edu.ec/
+  date: 2018 - 2019
+  subtitle: Profesor
+  tags:
+    - tag: Enseñanza
+    - tag: Investigación
+  timeline-side: right
+
+- title: University of Birmingham
+  title-url: https://www.birmingham.ac.uk/postgraduate/courses/taught/computer-science/cyber-security.aspx
+  date: 2016 - 2017
+  subtitle: MSc Cyber Security con Distinction
+  timeline-side: left
+
+
+- title: Universidad de Cuenca
+  title-url: https://www.ucuenca.edu.ec/
+  date: 2014 - 2016
+  subtitle: Desarrollador de Software
+  tags:
+    - tag: Frontent - Angular JS
+    - tag: Backend - java
+  timeline-side: right
+
+- title: Universidad de Cuenca
+  title-url: https://www.ucuenca.edu.ec/
+  date: 2008 - 2014
+  subtitle: Ingeniero en Computación
+  timeline-side: left
