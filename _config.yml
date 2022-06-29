@@ -4,7 +4,7 @@
 # title: This will be displayed as the website's name in your browser tab.
 title: XAFERIMA
 # description: This will be meta HTML tag content. This can be ignored.
-description: Personal website powered by Jekyll
+description: Personal website 
 # baseurl: The subpath of your site
 # > set this to "", if you renamed the repository to <user>.github.io
 baseurl: "" 
@@ -14,6 +14,7 @@ username: Xavier Riofrío
 # typing_text: This will be typed before 'scroll down for more'.
 
 typing_text: <span>Computer Science Eng, <br> <br> MsC Cyber Security.
+typing_text_es: <span>Ingeniero en Computación, <br> <br> MsC Cyber Seguridad.
 # email: Your E-Mail address for the email button.  
 email: xaferima@gmail.com
 # For every social button you want to display, set your username or userid
@@ -32,8 +33,10 @@ medium_username: xaferima
 show_aboutme_card: true
 # about_me_title: The will be displayed as the title in the About Me section
 about_me_title: WhoAmI
+about_me_title_es: WhoAmI
 # about_me_description: This will be displayed under the title.
-about_me_description: I am a Computer Science engineer interested and enthusiastic about everything that entails cybersecurity, especially in offensive security. A skilled professional with around 8 years of IT experience, and 4+ years in the Cybersecurity area.<br> <br>Strong skills in offensive security for penetration testing including reconnaissance, OSINT, vulnerability identification, exploitation, automation, etc. Seasoned interpersonal skills, strong work ethics, and ability to work with different groups in both languages English and Spanish.
+about_me_description: I am a Computer Science engineer, interested and enthusiastic about everything that entails cybersecurity, especially in offensive security. A skilled professional with around 8 years of IT experience, and 4+ years in the Cybersecurity area.<br> <br>Strong skills in offensive security for penetration testing including reconnaissance, OSINT, vulnerability identification, exploitation, automation, etc. Seasoned interpersonal skills, strong work ethics, and ability to work with different groups in both languages English and Spanish.
+about_me_description_es: Soy un ingeniero en computación, interesado y entusiasta en todo lo que conlleva la ciberseguridad, especialmente en seguridad ofensiva. Un profesional calificado con alrededor de 8 años de experiencia en TI y más de 4 años en el área de Ciberseguridad.<br> <br>Habilidades en seguridad ofensiva para pruebas de penetración que incluyen reconocimiento, OSINT, identificación de vulnerabilidades, explotación, automatización, etc. Habilidades interpersonales , fuerte ética de trabajo y capacidad para trabajar con diferentes grupos en ambos idiomas, inglés y español.
 
 # SKILLS SECTION
 # show_skills_card:
@@ -42,6 +45,7 @@ about_me_description: I am a Computer Science engineer interested and enthusiast
 show_skills_card: true
 # about_me_title: The will be displayed as the title in the Skills section
 skills_title: Skills
+skills_title_es: Habilidades
 
 # TIMELINE SECTION
 # show_timeline_card:
@@ -50,6 +54,7 @@ skills_title: Skills
 show_timeline_card: true
 # timeline_title: The will be displayed as the title in the Timeline section
 timeline_title: Education & Experience
+timeline_title_es: Educación & Experiencia
 # cv_download_link: The link where you host your cv.
 # > e.g. you share your cv on your dropbox, then add the dropbox link here
 cv_download_link: https://drive.google.com/file/d/1v9axufp_jPxHvpHr8yoJ9bAycZEZP8QX/view
@@ -62,7 +67,7 @@ show_projects_card: false
 # show_projects:
 # > setting this to true, will display your listed projects in _data/projects.yml
 # > setting this to false, will omit your listed projects
-show_projects: trufalsee
+show_projects: false
 # projects_title: The will be displayed as the title of your projects
 projects_title: Projects
 # show_os_projects:
@@ -85,6 +90,7 @@ show_posts_card: true
 show_posts: true
 # posts_title: The will be displayed as the title of your posts
 posts_title: Personal posts
+posts_title_es: Blog personal
 
 
 
@@ -106,8 +112,10 @@ papers_description: sI am a Computer Science engineer interested and enthusiasti
 show_contact_card: true
 # contact_title: The will be displayed as the title in the Contact section
 contact_title: Contact
+contact_title_es: Contacto
 # contact_description: This will be displayed under the title.
 contact_description: Please, contact me for anything related to information security. <br><center><script src="https://tryhackme.com/badge/269565"></script><center>
+contact_description_es: Por favor, para más información o consulta se puede contactar por cualquier medio a continuación. <br><center><script src="https://tryhackme.com/badge/269565"></script><center>
 
 # GITHUB-METADATA
 # Set this to your forked repository
