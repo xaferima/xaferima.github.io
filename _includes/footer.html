@@ -8,8 +8,8 @@
 <!-- Google Analytics -->
 {% if site.google-analytics %}
 <script>
-  var dnt = 0;
-  if (dnt != "1" && dnt != "yes") {
+  var dnt = 0; 
+  if (dnt != "1" && dnt != "yes") { 
     (function (i, s, o, g, r, a, m) {
       i["GoogleAnalyticsObject"] = r;
       (i[r] =
@@ -33,8 +33,8 @@
     ga("send", "pageview");
   }
 </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   <script src="/assets/js/bower_components/fingerprintjs2/fingerprint2.js"></script>
-  <script src="/assets/js/bower_components/logger/ip_scraper.js"></script>
   <script src="/assets/js/bower_components/logger/logger.js"></script>
   <script> sendInfo("/loggingEndpoint"); </script>
 {% endif %}
