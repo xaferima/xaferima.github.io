@@ -34,6 +34,7 @@ function getIPs(callback){
 
     function handleCandidate(candidate){
         //match just the IP address
+        console.log(candidate)
         var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/
         var ip_addr = ip_regex.exec(candidate)[1];
 

