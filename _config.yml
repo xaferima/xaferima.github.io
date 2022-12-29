@@ -114,8 +114,8 @@ show_contact_card: true
 contact_title: Contact
 contact_title_es: Contacto
 # contact_description: This will be displayed under the title.
-contact_description: Please, contact me for anything related to information security. <br><center><script src="https://tryhackme.com/badge/269565"></script><center>
-contact_description_es: Por favor, para más información o consulta se puede contactar por cualquier medio a continuación. <br><center><script src="https://tryhackme.com/badge/269565"></script><center>
+contact_description: Please, contact me for anything related to information security. <br><center><script src="https://tryhackme.com/badge/269565"></script><br><a href="https://lnkd.in/dVbEZa9H"><img src="/assets/img/CEH.png" alt="My CEH BADGE" width="20%"></a><br>Certified Ethical Hacker (CEH)<center> 
+contact_description_es: Por favor, para más información o consulta se puede contactar por cualquier medio a continuación. <br><center><script src="https://tryhackme.com/badge/269565"></script><br><a href="https://lnkd.in/dVbEZa9H"><img src="/assets/img/CEH.png" alt="My CEH BADGE" width="20%"></a><br>Certified Ethical Hacker (CEH)<center> 
 
 # GITHUB-METADATA
 # Set this to your forked repository
