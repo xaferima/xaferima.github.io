@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>{{ site.title }}</title>
+  <title>{{ site.title }} · X-MEN '97</title>
   <meta name="description" content="{{ site.description }}">
 
   <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/favicon/apple-touch-icon.png" | prepend: site.baseurl }}">
@@ -15,15 +15,20 @@
   <link rel="icon" type="image/png" sizes="16x16" href="{{ "/assets/favicon/favicon-16x16.png" | prepend: site.baseurl }}">
   <link rel="manifest" href="{{ "/assets/favicon/site.webmanifest" | prepend: site.baseurl }}">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ "/assets/css/main.min.css" | prepend: site.baseurl }}">
   <link rel="stylesheet" href="{{ "/assets/css/vendors.min.css" | prepend: site.baseurl }}">
+  <link rel="stylesheet" href="{{ "/assets/css/xmen97.css" | prepend: site.baseurl }}">
 
   <script src="{{ "/assets/js/vendors.min.js" | prepend: site.baseurl }}"></script>
+  <script>if(window.particlesJS)window.particlesJS.load=function(){};</script>
   <script src="{{ "/assets/js/app.min.js" | prepend: site.baseurl }}"></script>
+  <script src="{{ "/assets/js/xmen97.js" | prepend: site.baseurl }}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <style>.landing-title h1{line-height:1.1!important}</style>
 </head>
-
+ 
 <body>
   <div id="preloader">
     <div class="load">
@@ -33,25 +38,26 @@
       <hr />
     </div>
   </div>
-  <div style="display:flex;justify-content:flex-end;gap:1rem;padding:0.5rem 1rem;">
-    <a href="/">🇬🇧 English</a>
-    <a href="/xmen97"><img src="/assets/img/xmen97-logo.svg" alt="X-Men '97" style="height:20px;vertical-align:middle;"></a>
+  <div style="display:flex;justify-content:space-between;padding:0.5rem 1rem;">
+    <a href="/?normal" style="color:#f5c518;">← Normal site</a>
+    <span style="color:#f5c518;font-weight:bold;"><img src="/assets/img/xmen97-logo.svg" alt="X-Men '97" style="height:20px;vertical-align:middle;"></span>
+    <a href="/index-es.html" style="color:#f5c518;">Español →</a>
   </div>
-  {% include landing-page-es.html %}
+  {% include landing-page.html %}
   <div class="layout">
     {%if site.show_aboutme_card %}
       <section class="card neumorphism-card-big">
-        {% include section-aboutme-es.html %}
+        {% include section-aboutme.html %}
       </section>
     {% endif %}
     {%if site.show_skills_card %}
       <section class="card neumorphism-card-big">
-        {% include section-skills-es.html %}
+        {% include section-skills.html %}
       </section>
     {% endif %}
     {%if site.show_timeline_card %}
       <section class="card neumorphism-card-big">
-        {% include section-timeline-es.html %}
+        {% include section-timeline.html %}
       </section>
     {% endif %}
     {%if site.show_projects_card %}
@@ -66,16 +72,15 @@
     {% endif %}
     {%if site.show_posts_card %}
       <section class="card neumorphism-card-big">
-        {% include section-posts-es.html %}
+        {% include section-posts.html %}
       </section>
     {% endif %}
     {%if site.show_contact_card %}
     <section class="card neumorphism-card-big">
-      {% include section-contact-es.html %}
+      {% include section-contact.html %}
     </section>
     {% endif %}
   </div>
   {% include footer.html %}
 </body>
 </html>
-

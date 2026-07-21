@@ -13,8 +13,8 @@ baseurl: ""
 username: Xavier Riofrío
 # typing_text: This will be typed before 'scroll down for more'.
 
-typing_text: <span>Offensive Security Expert, <br> <br> Mobile Security | Web Pentesting, <br> <br> KYC/Biometric Research.
-typing_text_es: <span>Experto en Seguridad Ofensiva, <br> <br> Mobile Security | Web Pentesting, <br> <br> Investigación KYC/Biométrica.
+typing_text: <span>Offensive Security Expert, <br> Mobile Security | Web Pentesting, <br> KYC/Biometric Research.
+typing_text_es: <span>Experto en Seguridad Ofensiva, <br> Mobile Security | Web Pentesting, <br> Investigación KYC/Biométrica.
 # email: Your E-Mail address for the email button.  
 email: xaferima@gmail.com
 # For every social button you want to display, set your username or userid
