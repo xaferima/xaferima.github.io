@@ -1,24 +1,10 @@
-# > name: Name of your programming language
-# > weight: Describes how good you know the language - values from 1 up to 5
-#
-# Example of a Language
-# - name: Language
-#   weight: 5
-
-- name: Linux
+- name: OWASP Mobile Top 10
+  weight: 4
+- name: OWASP API Security Top 10
+  weight: 4
+- name: OWASP Web Testing Guide
   weight: 3
-
-- name: DevSecOps
-  weight: 1
-
-- name: Virtualization
-  weight: 2
-
-- name: English IELTS
+- name: OWASP Mobile MASVS
   weight: 3
-
-- name: CCNA
+- name: PTES
   weight: 2
-
-- name: Certified Ethical Hacker
-  weight: 5

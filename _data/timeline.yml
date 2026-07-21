@@ -1,68 +1,105 @@
-# > title: Name of your timeline entry, university or work place
-# > title-url: Link to your timeline entry, university or work place
-# > date: Time span
-# > subtitle: The description under the title
-# > tags: List of tags you want to associate with the entry
-# > timeline-side: The side on which you want to display the entry: left or right
-
-# Example of a timeline entry
-# - title: airbnb
-#   title-url: https://example.com/
-#   date: Sep 2019 - Present
-#   subtitle: Fullstack Developer
-#   tags:
-#     - tag: React
-#     - tag: Javascript
-#     - tag: Ruby
-#     - tag: Rails
-#   timeline-side: right
-- title: CEH - EC-COUNCIL
-  title-url: https://lnkd.in/dVbEZa9H
-  date: November 2022
-  subtitle: CERTIFIED ETHICAL HACKER
+- title: Deuna
+  title-url: "https://deuna.com"
+  date: December 2023 - Present
+  subtitle: Offensive Security Expert
   tags:
-    - tag: Score:96.8% - 121/125
+    - tag: Mobile Ethical Hacker
+    - tag: API Pentesting
+    - tag: Biometric Security Research
+    - tag: KYC Security
+  timeline-side: left
+
+- title: DEF CON 34
+  title-url: "https://info.defcon.org/defcon34/content/?id=66601"
+  date: August 2026
+  subtitle: "Speaker — Your Bank Thinks I'm You: A Complete Kill Chain Against Mobile Banking Security"
+  tags:
+    - tag: Biometric Bypass
+    - tag: KYC Security Research
+  timeline-side: right
+
+- title: BSides Colombia
+  title-url:
+  date: 2026
+  subtitle: "Speaker — Your Brain > Your Toolkit: Real Bugs, Zero Code, Zero Tools"
+  tags:
+    - tag: Logic Flaw Exploitation
+    - tag: Zero Code, Zero Tools
+  timeline-side: left
+
+- title: CAPIPEN (C-APIPen)
+  title-url: "https://pentestingexams.com/certificate-validation/"
+  date: June 2026
+  subtitle: "Certified API Penetration Tester — The SecOps Group"
+  tags:
+    - tag: Credential ID 11585074
+  timeline-side: right
+
+- title: PWN OR DIE
+  title-url:
+  date: 2025
+  subtitle: "Speaker — Your Brain > Your Toolkit: Real Bugs, Zero Code, Zero Tools"
+  tags:
+    - tag: Logic Flaw Exploitation
+    - tag: Zero Code, Zero Tools
+  timeline-side: left
+
+- title: eJPT
+  title-url: "https://certs.ine.com/401b732f-7bbe-4ebf-af21-5ccdb6b68442#gs.g47k9g#acc.YVPWDmlU"
+  date: October 2024
+  subtitle: "eJPT — INE (Exp. Oct 2027)"
+  tags:
+    - tag: Junior Penetration Tester
+  timeline-side: right
+
+- title: Unicomer Group
+  title-url:
+  date: January 2023 - November 2023
+  subtitle: Cyber Security Specialist
+  tags:
+    - tag: Ethical Hacking
+    - tag: Microsoft Defender
+    - tag: Cloud Security
   timeline-side: left
 
 - title: CERN
-  title-url: https://home.cern/
-  date: April 2021 - May 2022
-  subtitle: Computer Science Engineer
+  title-url: "https://home.cern/"
+  date: April 2021 - June 2022
+  subtitle: Security Engineer (Penetration Testing)
   tags:
-    - tag: First Ecuadorian engineer to work at CERN
     - tag: Web penetration testing
-    - tag: Ethical hacking
+    - tag: CI/CD Security
+    - tag: Vulnerability Analysis
   timeline-side: right
 
-- title: Private 
-  title-url: 
-  date: December 2017 - Ongoing
-  subtitle: Consulting in IT Security
+- title: Independent Security Consultant
+  title-url:
+  date: December 2017 - Present
+  subtitle: Security Consultant & Bug Bounty Researcher
   tags:
     - tag: Security researcher
     - tag: Trainer
     - tag: Bug bounty hunter
-  timeline-side: right
-
-- title: UTPL
-  title-url: https://www.utpl.edu.ec/
-  date: 2017 - Ongoing
-  subtitle: Administration and Public Management
   timeline-side: left
 
+- title: UTPL
+  title-url: "https://www.utpl.edu.ec/"
+  date: October 2017 - June 2023
+  subtitle: Administration and Public Management
+  timeline-side: right
+
 - title: Universidad de Cuenca
-  title-url: https://www.ucuenca.edu.ec/
-  date: 2018 - 2021
+  title-url: "https://www.ucuenca.edu.ec/"
+  date: May 2018 - March 2021
   subtitle: Cyber Security Researcher
   tags:
     - tag: White-Black box hacking
     - tag: Zero-day attacks
-  timeline-side: right
-
+  timeline-side: left
 
 - title: Universidad Nacional de Loja
-  title-url: https://www.unl.edu.ec/
-  date: 2018 - 2019
+  title-url: "https://www.unl.edu.ec/"
+  date: October 2018 - April 2019
   subtitle: Professor
   tags:
     - tag: Teaching
@@ -70,23 +107,22 @@
   timeline-side: right
 
 - title: University of Birmingham
-  title-url: https://www.birmingham.ac.uk/postgraduate/courses/taught/computer-science/cyber-security.aspx
-  date: 2016 - 2017
+  title-url: "https://www.birmingham.ac.uk/"
+  date: September 2016 - December 2017
   subtitle: MSc Cyber Security with Distinction
   timeline-side: left
 
-
 - title: Universidad de Cuenca
-  title-url: https://www.ucuenca.edu.ec/
-  date: 2014 - 2016
-  subtitle: Software developer
+  title-url: "https://www.ucuenca.edu.ec/"
+  date: August 2014 - August 2016
+  subtitle: Software Developer
   tags:
-    - tag: Frontent - Angular JS
-    - tag: Backend - java
+    - tag: Frontend - Angular JS
+    - tag: Backend - Java Spring Boot
   timeline-side: right
 
 - title: Universidad de Cuenca
-  title-url: https://www.ucuenca.edu.ec/
+  title-url: "https://www.ucuenca.edu.ec/"
   date: 2008 - 2014
   subtitle: BSc in Computer Science and Engineering
   timeline-side: left

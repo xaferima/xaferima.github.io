@@ -13,8 +13,8 @@ baseurl: ""
 username: Xavier Riofrío
 # typing_text: This will be typed before 'scroll down for more'.
 
-typing_text: <span>Computer Science Eng, <br> <br> MsC Cyber Security.
-typing_text_es: <span>Ingeniero en Computación, <br> <br> MsC Cyber Seguridad.
+typing_text: <span>Offensive Security Expert, <br> <br> Mobile Security | Web Pentesting, <br> <br> KYC/Biometric Research.
+typing_text_es: <span>Experto en Seguridad Ofensiva, <br> <br> Mobile Security | Web Pentesting, <br> <br> Investigación KYC/Biométrica.
 # email: Your E-Mail address for the email button.  
 email: xaferima@gmail.com
 # For every social button you want to display, set your username or userid
@@ -22,7 +22,7 @@ email: xaferima@gmail.com
 # > twitter_username:
 linkedin_username: xaferima
 twitter_username: xaferima
-github_username: 
+github_username: xaferima
 tryhackme_username: xaferima
 medium_username: xaferima
 
@@ -35,8 +35,8 @@ show_aboutme_card: true
 about_me_title: WhoAmI
 about_me_title_es: WhoAmI
 # about_me_description: This will be displayed under the title.
-about_me_description: I am a Computer Science engineer, interested and enthusiastic about everything that entails cybersecurity, especially in offensive security. A skilled professional with around 8 years of IT experience, and 4+ years in the Cybersecurity area.<br> <br>Strong skills in offensive security for penetration testing including reconnaissance, OSINT, vulnerability identification, exploitation, automation, etc. Seasoned interpersonal skills, strong work ethics, and ability to work with different groups in both languages English and Spanish.
-about_me_description_es: Soy un ingeniero en computación, interesado y entusiasta en todo lo que conlleva la ciberseguridad, especialmente en seguridad ofensiva. Un profesional calificado con alrededor de 8 años de experiencia en TI y más de 4 años en el área de Ciberseguridad.<br> <br>Habilidades en seguridad ofensiva para pruebas de penetración que incluyen reconocimiento, OSINT, identificación de vulnerabilidades, explotación, automatización, etc. Habilidades interpersonales , fuerte ética de trabajo y capacidad para trabajar con diferentes grupos en ambos idiomas, inglés y español.
+about_me_description: "Offensive Security Expert with a Master's degree in Cyber Security from the University of Birmingham and 10+ years of experience across mobile, API, cloud, and infrastructure security. Currently leading offensive security operations at a Latin American fintech, with deep specialization in Android security research — including RASP bypass, KYC biometric evasion, and mobile application reverse engineering using dynamic instrumentation.<br><br>Former security engineer at CERN, where I focused on web penetration testing and vulnerability analysis for critical research infrastructure. My work spans the full offensive security lifecycle: from attack surface reconnaissance and vulnerability discovery to exploitation, reporting, and remediation guidance. I hold industry certifications including CEH, eJPT, and CAPIPEN, and have presented original security research at international conferences including <b>DEF CON 34</b> (Las Vegas), <b>BSides Colombia</b>, and <b>PWN or DIE</b> (Ecuador). At DEF CON 34 I presented 'Your Bank Thinks I'm You: A Complete Kill Chain Against Mobile Banking Security', and at BSides Colombia and PWN or DIE I presented 'Your Brain > Your Toolkit: Real Bugs, Zero Code, Zero Tools', a talk on finding critical vulnerabilities through pure logical reasoning without automated tooling."
+about_me_description_es: "Experto en Seguridad Ofensiva con una Maestría en Ciberseguridad de la Universidad de Birmingham y más de 10 años de experiencia en seguridad móvil, API, cloud e infraestructura. Actualmente lidero operaciones de seguridad ofensiva en una fintech latinoamericana, con especialización en investigación de seguridad Android — incluyendo bypass de RASP, evasión biométrica KYC e ingeniería inversa de aplicaciones móviles mediante instrumentación dinámica.<br><br>Ex ingeniero de seguridad en el CERN, donde me enfoqué en pentesting web y análisis de vulnerabilidades para infraestructura crítica de investigación. Mi trabajo abarca todo el ciclo de vida de seguridad ofensiva: desde reconocimiento de superficie de ataque y descubrimiento de vulnerabilidades hasta explotación, reporte y guía de remediación. Poseo certificaciones CEH, eJPT y CAPIPEN, y he presentado investigación original en conferencias internacionales como <b>DEF CON 34</b> (Las Vegas), <b>BSides Colombia</b> y <b>PWN or DIE</b> (Ecuador). En DEF CON 34 presenté 'Your Bank Thinks I'm You: A Complete Kill Chain Against Mobile Banking Security', y en BSides Colombia y PWN or DIE presenté 'Your Brain > Your Toolkit: Real Bugs, Zero Code, Zero Tools', una charla sobre encontrar vulnerabilidades críticas mediante razonamiento lógico puro sin herramientas automatizadas."
 
 # SKILLS SECTION
 # show_skills_card:
@@ -57,7 +57,7 @@ timeline_title: Education & Experience
 timeline_title_es: Educación & Experiencia
 # cv_download_link: The link where you host your cv.
 # > e.g. you share your cv on your dropbox, then add the dropbox link here
-cv_download_link: https://drive.google.com/file/d/1v9axufp_jPxHvpHr8yoJ9bAycZEZP8QX/view
+cv_download_link: /assets/pdf/CV_XAVIER_RIOFRIO_EN_MAY_2026_FULL.pdf
 
 # PROJECTS SECTION
 # show_projects_card:
@@ -114,8 +114,8 @@ show_contact_card: true
 contact_title: Contact
 contact_title_es: Contacto
 # contact_description: This will be displayed under the title.
-contact_description: Please, contact me for anything related to information security. <br><center><script src="https://tryhackme.com/badge/269565"></script><br><a href="https://lnkd.in/dVbEZa9H"><img src="/assets/img/CEH.png" alt="My CEH BADGE" width="20%"></a><br>Certified Ethical Hacker (CEH)<center> 
-contact_description_es: Por favor, para más información o consulta se puede contactar por cualquier medio a continuación. <br><center><script src="https://tryhackme.com/badge/269565"></script><br><a href="https://lnkd.in/dVbEZa9H"><img src="/assets/img/CEH.png" alt="My CEH BADGE" width="20%"></a><br>Certified Ethical Hacker (CEH)<center> 
+contact_description: "Please, contact me for anything related to information security. <br><center><script src=\"https://tryhackme.com/badge/269565\"></script></center><div style=\"display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-top:10px;\"><div style=\"text-align:center;\"><a href=\"https://lnkd.in/dVbEZa9H\" target=\"_blank\"><img src=\"/assets/img/CEH.png\" alt=\"CEH\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">CEH</div></a></div><div style=\"text-align:center;\"><a href=\"https://certs.ine.com/401b732f-7bbe-4ebf-af21-5ccdb6b68442#gs.g47k9g#acc.YVPWDmlU\" target=\"_blank\"><img src=\"/assets/img/eJPT.png\" alt=\"eJPT (INE)\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">eJPT (INE)</div></a></div><div style=\"text-align:center;\"><a href=\"https://pentestingexams.com/certificate-validation/\" target=\"_blank\"><img src=\"/assets/img/secops.png\" alt=\"CAPIPEN (SecOps Group)\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">CAPIPEN (SecOps Group)</div></a></div></div>"
+contact_description_es: "Por favor, para más información o consulta se puede contactar por cualquier medio a continuación. <br><center><script src=\"https://tryhackme.com/badge/269565\"></script></center><div style=\"display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-top:10px;\"><div style=\"text-align:center;\"><a href=\"https://lnkd.in/dVbEZa9H\" target=\"_blank\"><img src=\"/assets/img/CEH.png\" alt=\"CEH\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">CEH</div></a></div><div style=\"text-align:center;\"><a href=\"https://certs.ine.com/401b732f-7bbe-4ebf-af21-5ccdb6b68442#gs.g47k9g#acc.YVPWDmlU\" target=\"_blank\"><img src=\"/assets/img/eJPT.png\" alt=\"eJPT (INE)\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">eJPT (INE)</div></a></div><div style=\"text-align:center;\"><a href=\"https://pentestingexams.com/certificate-validation/\" target=\"_blank\"><img src=\"/assets/img/secops.png\" alt=\"CAPIPEN (SecOps Group)\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">CAPIPEN (SecOps Group)</div></a></div></div>"
 
 # GITHUB-METADATA
 # Set this to your forked repository

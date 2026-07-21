@@ -1,33 +1,16 @@
-# > name: Name of your Dev Tool
-# > weight: Describes how good you know the tool - values from 1 up to 5
-#
-# Example of a Dev Tool
-# - name: Git
-#   weight: 5
-
-- name: Burp suite
-  weight: 5
-
-- name: Metasploit
-  weight: 3
-
-- name: Nmap
+- name: Burp Suite
   weight: 4
-
-- name: SQLmap
-  weight: 2
-
-- name: OWASP Zap
+- name: Frida
+  weight: 4
+- name: MobSF
   weight: 3
-
-- name: Nessus
+- name: JADX
+  weight: 3
+- name: Nmap
   weight: 2
-
-- name: Wireshark
+- name: Nuclei
+  weight: 2
+- name: Metasploit
   weight: 1
-
-- name: Dirbuster,FFuF
-  weight: 2
-
-- name: Dorks(Google, github, etc)
+- name: AWS CLI
   weight: 1
