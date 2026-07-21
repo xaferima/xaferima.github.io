@@ -1,0 +1,397 @@
+/* ============================================================
+   X-MEN '97 THEME — 90s Comic Book style
+   Halftone dots, CSS animations, bold gold outlines
+   ============================================================ */
+
+:root {
+  --xmen-bg: #050515;
+  --xmen-card-bg: linear-gradient(160deg, rgba(20, 0, 50, 0.9) 0%, rgba(5, 5, 21, 0.95) 100%);
+  --xmen-gold: #f5c518;
+  --xmen-gold-dark: #c49b00;
+  --xmen-gold-light: #ffe44d;
+  --xmen-purple-dark: #03030a;
+  --xmen-purple-light: #1a0533;
+}
+
+/* ── X-Men Typography ── */
+body, p, .desc, .description, .subtitle, .flag span, .time, .label, .tag, .footer {
+  font-family: 'Oswald', sans-serif !important;
+  font-weight: 400;
+}
+h1, h2, h3, h4, h5, h6, .title, .highlight-title, #txt-rotate, .landing-title h1 {
+  font-family: 'Bangers', Impact, 'Arial Black', sans-serif !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+.landing-title h1, #txt-rotate, .landing-title .highlight-title {
+  text-transform: uppercase;
+}
+.landing-icons .label {
+  font-family: 'Oswald', sans-serif !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+.neumorphism-button, .filter-button, input[type="radio"] + .filter-button {
+  font-family: 'Oswald', sans-serif !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+}
+.section-title {
+  font-family: 'Bangers', Impact, 'Arial Black', sans-serif !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+}
+.timeline-wrapper .desc,
+.timeline-wrapper .flag,
+.timeline-wrapper .time {
+  font-family: 'Oswald', sans-serif !important;
+}
+#skills div {
+  font-family: 'Oswald', sans-serif !important;
+}
+
+/* ── Section titles: 3D gold + red bevel (WhoAmI, Skills, etc.) ── */
+.title {
+  color: var(--xmen-gold) !important;
+  -webkit-text-stroke: 1px #8b0000;
+  text-shadow:
+    1px 1px 0 #990000,
+    2px 2px 0 #8b0000,
+    3px 3px 0 #7a0000,
+    4px 4px 0 #4a0000 !important;
+}
+
+/* ── Card titles in projects/posts — gold comic style ── */
+.card-title, .card-title a, .name-link-wrapper h3, .project-desc {
+  color: var(--xmen-gold) !important;
+}
+.card-title a:hover {
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.7);
+}
+.name-link-wrapper h3 {
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.7);
+}
+
+/* ── About Me / Papers description — comic text box ── */
+.description {
+  border: 2px dashed rgba(245, 197, 24, 0.4) !important;
+  padding: 1rem !important;
+  border-radius: 4px !important;
+  background: rgba(5, 5, 21, 0.5) !important;
+}
+
+/* ── Contact subtitle — gold banner ── */
+.subtitle {
+  border: 1px solid rgba(245, 197, 24, 0.3) !important;
+  padding: 0.75rem !important;
+  border-radius: 4px !important;
+  background: rgba(5, 5, 21, 0.4) !important;
+}
+
+/* ── Read More button (Bootstrap btn-outline-success) ── */
+.btn-outline-success {
+  color: var(--xmen-gold) !important;
+  border-color: var(--xmen-gold) !important;
+  background: transparent !important;
+}
+.btn-outline-success:hover {
+  background: var(--xmen-gold) !important;
+  color: #000 !important;
+  border-color: var(--xmen-gold-dark) !important;
+}
+
+/* ── Background: deep navy + gold halftone dots ── */
+html, body, .footer, #preloader, body > div:first-child {
+  background: #050515 !important;
+  background-image:
+    radial-gradient(circle, rgba(245, 197, 24, 0.1) 2px, transparent 2px),
+    radial-gradient(circle, rgba(245, 197, 24, 0.05) 1px, transparent 1px) !important;
+  background-size: 20px 20px, 8px 8px !important;
+  background-position: 0 0, 10px 10px !important;
+}
+
+/* ── Landing page: background + animations container ── */
+#landing {
+  background: transparent !important;
+  position: relative !important;
+  overflow: hidden !important;
+  z-index: 0 !important;
+}
+
+/* ── Landing title: center + 3D X-Men comic text (gold + red bevel) ── */
+.landing-title {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0% !important;
+  gap: 0.15rem !important;
+}
+.landing-title h1 {
+  width: 100% !important;
+  text-align: center !important;
+  line-height: 1 !important;
+}
+.landing-title h1 + h1 {
+  margin-top: 0 !important;
+}
+.landing-title h1,
+#txt-rotate,
+.landing-title .highlight-title {
+  color: #f5c518 !important;
+  -webkit-text-stroke: 1px #8b0000;
+  text-shadow:
+    1px 1px 0 #990000,
+    2px 2px 0 #8b0000,
+    3px 3px 0 #7a0000,
+    4px 4px 0 #4a0000,
+    5px 5px 0 #2a0000 !important;
+  font-family: 'Bangers', Impact, 'Arial Black', sans-serif !important;
+  letter-spacing: 0.05rem;
+}
+
+
+
+/* ── Floating gold shards (box-shadow multiples) ── */
+#landing .landing-title::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: 10%;
+  width: 8px;
+  height: 8px;
+  background: var(--xmen-gold);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  animation: floatShard1 8s ease-in-out infinite;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+#landing .landing-title::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  right: 15%;
+  width: 6px;
+  height: 6px;
+  background: var(--xmen-gold-light);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  animation: floatShard2 10s ease-in-out infinite;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+@keyframes floatShard1 {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+  50% { transform: translateY(-40px) rotate(180deg); opacity: 0.8; }
+}
+@keyframes floatShard2 {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+  50% { transform: translateY(-30px) rotate(-180deg); opacity: 0.7; }
+}
+
+/* ── Animated diagonal action streaks ── */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent 0px,
+    transparent 40px,
+    rgba(245, 197, 24, 0.015) 40px,
+    rgba(245, 197, 24, 0.015) 41px
+  );
+  animation: slideStreaks 12s linear infinite;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+@keyframes slideStreaks {
+  to { transform: translate(50%, 50%); }
+}
+
+/* ── Cards: comic-style thick gold border + offset shadow ── */
+.layout .card {
+  background: var(--xmen-card-bg) !important;
+  border: 3px solid var(--xmen-gold) !important;
+  box-shadow: 8px 8px 0px var(--xmen-gold-dark) !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.neumorphism-card-big {
+  box-shadow: 8px 8px 0px var(--xmen-gold-dark) !important;
+  border: 3px solid var(--xmen-gold) !important;
+}
+
+.neumorphism-card {
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.8), inset -2px -2px 4px rgba(245,197,24,0.2) !important;
+}
+
+.layout .card:hover {
+  box-shadow: 10px 10px 0px var(--xmen-gold) !important;
+  transform: translate(-2px, -2px);
+}
+
+/* ── Links — Gold comic accent ── */
+a {
+  color: var(--xmen-gold) !important;
+}
+a:hover {
+  color: #fff !important;
+}
+
+.highlight-title {
+  color: var(--xmen-gold) !important;
+  -webkit-text-stroke: 0.5px rgba(0,0,0,0.3);
+  text-shadow:
+    0.125rem 0.125rem 0 var(--xmen-purple-dark),
+    0.25rem 0.25rem 0.25rem var(--xmen-gold) !important;
+}
+
+.highlight-link {
+  box-shadow: inset 0 -0.125rem 0 var(--xmen-gold) !important;
+  color: var(--xmen-gold) !important;
+}
+.highlight-link:hover {
+  box-shadow: inset 0 -2rem 0 0 var(--xmen-gold) !important;
+  color: #000 !important;
+}
+
+/* ── Header X-MEN '97 badge ── */
+body > div:first-child span {
+  font-family: 'Bangers', Impact, 'Arial Black', sans-serif !important;
+  letter-spacing: 0.2rem;
+  text-shadow: 2px 2px 0 #000, -1px -1px 0 rgba(245,197,24,0.3);
+  font-size: 1.1rem;
+}
+
+body > div:first-child a {
+  font-weight: 600;
+}
+
+/* ── Neumorphism buttons ── */
+.neumorphism-button {
+  background: linear-gradient(145deg, rgba(20,0,50,0.4) 15%, rgba(5,5,21,0.6) 80%) !important;
+  border: 1.5px solid rgba(245,197,24,0.3) !important;
+  box-shadow: 3px 3px 0 rgba(245,197,24,0.2) !important;
+}
+
+input[type="radio"]:checked + .filter-button {
+  color: #000 !important;
+  font-weight: 700 !important;
+  background: var(--xmen-gold) !important;
+  border: 2px solid var(--xmen-gold-dark) !important;
+  box-shadow: 3px 3px 0 var(--xmen-gold-dark) !important;
+}
+
+/* ── Skills — comic book text effect ── */
+#skills div {
+  font-weight: 600 !important;
+  letter-spacing: 0.02rem;
+}
+#skills div[skill-type="language"] {
+  color: var(--xmen-gold) !important;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.7);
+}
+#skills div[skill-type="framework"] {
+  color: var(--xmen-gold-dark) !important;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.7);
+}
+#skills div[skill-type="tool"] {
+  color: var(--xmen-gold-light) !important;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.7);
+}
+
+/* ── Timeline ── */
+.timeline-wrapper .hexagon {
+  background: var(--xmen-gold) !important;
+  box-shadow: 0 0 12px var(--xmen-gold), 0 0 24px rgba(245,197,24,0.4);
+}
+.timeline-wrapper .hexagon:before {
+  border-bottom: 0.25rem solid var(--xmen-gold) !important;
+}
+.timeline-wrapper .hexagon:after {
+  border-top: 0.25rem solid var(--xmen-gold) !important;
+}
+.timeline-wrapper .timeline:before {
+  background: linear-gradient(to bottom, var(--xmen-gold) 0%, #c49b00 8%, #c49b00 92%, var(--xmen-gold) 100%) !important;
+}
+.timeline-wrapper .flag span:after {
+  color: var(--xmen-gold) !important;
+}
+.timeline-wrapper .desc,
+.timeline-wrapper .flag,
+.timeline-wrapper .time {
+  border: 1.5px solid rgba(245,197,24,0.2) !important;
+  background: rgba(5,5,21,0.85) !important;
+}
+.timeline-wrapper .flag {
+  border-color: var(--xmen-gold) !important;
+  border-width: 2px !important;
+}
+
+/* ── Preloader — gold (all bars) ── */
+#preloader .load hr {
+  background: var(--xmen-gold) !important;
+}
+
+/* ── Landing page social icons ── */
+.landing-icons .social-link .circle {
+  stroke: var(--xmen-gold) !important;
+  stroke-width: 0.4rem !important;
+}
+.landing-icons .social-link:hover .circle {
+  fill: #8b0000 !important;
+  stroke: var(--xmen-gold) !important;
+  stroke-width: 0.3rem !important;
+}
+.landing-icons .social-link:hover .social-svg {
+  fill: #000 !important;
+}
+.landing-icons .social-link .label {
+  text-shadow: 0 0 6px rgba(245, 197, 24, 0.5) !important;
+  border: 1px solid rgba(245, 197, 24, 0.2) !important;
+  padding: 0.1rem 0.4rem !important;
+  border-radius: 3px !important;
+}
+
+/* ── Contact social icons ── */
+.contact-icons .social-svg {
+  fill: var(--xmen-gold) !important;
+}
+.contact-icons .social-link:hover .social-svg {
+  fill: #fff !important;
+}
+
+/* ── Footer ── */
+.footer a {
+  color: var(--xmen-gold) !important;
+}
+.footer a:hover,
+.footer a:focus {
+  background: #050515 !important;
+  color: var(--xmen-gold-light) !important;
+}
+
+/* ── Tags / badges ── */
+.tag {
+  background: rgba(245,197,24,0.08) !important;
+  border: 1.5px solid rgba(245,197,24,0.35) !important;
+  color: var(--xmen-gold-light) !important;
+}
+
+/* ── Content sits above animation layers ── */
+.landing-title, .landing-icons, .layout, .footer, body > div:first-child {
+  position: relative;
+  z-index: 1;
+}

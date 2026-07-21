@@ -21,6 +21,8 @@
   <script src="{{ "/assets/js/vendors.min.js" | prepend: site.baseurl }}"></script>
   <script src="{{ "/assets/js/app.min.js" | prepend: site.baseurl }}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <style>.landing-title h1{line-height:1.1!important}</style>
+  <script>if('/'===location.pathname&&location.search.indexOf('normal')===-1&&Math.random()<.5)location.href='/xmen97'</script>
 </head>
  
 <body>
@@ -32,8 +34,9 @@
       <hr />
     </div>
   </div>
-  <div>
-    <a href="\index-es.html">Español</a>
+  <div style="display:flex;justify-content:flex-end;gap:1rem;padding:0.5rem 1rem;">
+    <a href="/index-es.html">🇪🇸 Español</a>
+    <a href="/xmen97"><img src="/assets/img/xmen97-logo.svg" alt="X-Men '97" style="height:20px;vertical-align:middle;"></a>
   </div>
   {% include landing-page.html %}
   <div class="layout">
