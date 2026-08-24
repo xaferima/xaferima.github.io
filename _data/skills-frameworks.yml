@@ -1,16 +1,16 @@
-- name: Android Security
+- name: Penetration Testing
+  weight: 4
+- name: Web Application Security
+  weight: 4
+- name: API Security
   weight: 4
 - name: Mobile Application Security
-  weight: 4
-- name: KYC / Biometric Security
-  weight: 4
-- name: Dynamic Instrumentation
   weight: 3
-- name: API Security
-  weight: 3
-- name: Web Application Security
-  weight: 2
 - name: Cloud Security
+  weight: 3
+- name: Business Logic Testing
+  weight: 3
+- name: KYC / Biometric Security
   weight: 2
 - name: Reverse Engineering
   weight: 2

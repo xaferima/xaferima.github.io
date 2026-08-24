@@ -1,14 +1,18 @@
 - name: Burp Suite
-  weight: 4
-- name: Frida
-  weight: 4
-- name: MobSF
   weight: 3
-- name: JADX
+- name: Python
+  weight: 3
+- name: Frida
   weight: 3
 - name: Nmap
   weight: 2
 - name: Nuclei
+  weight: 2
+- name: SQLmap
+  weight: 2
+- name: MobSF
+  weight: 2
+- name: JADX
   weight: 2
 - name: Metasploit
   weight: 1

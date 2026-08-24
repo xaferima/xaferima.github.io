@@ -1,10 +1,10 @@
-- name: OWASP Mobile Top 10
-  weight: 4
-- name: OWASP API Security Top 10
-  weight: 4
-- name: OWASP Web Testing Guide
+- name: OWASP Top 10
   weight: 3
-- name: OWASP Mobile MASVS
+- name: MITRE ATT&CK
+  weight: 3
+- name: Threat Modeling
   weight: 3
 - name: PTES
+  weight: 2
+- name: OWASP MASVS
   weight: 2

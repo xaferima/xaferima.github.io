@@ -12,7 +12,7 @@
 - title: DEF CON 34
   title-url: "https://info.defcon.org/defcon34/content/?id=66601"
   date: Agosto 2026
-  subtitle: "Ponente — Your Bank Thinks I'm You: A Complete Kill Chain Against Mobile Banking Security"
+  subtitle: "Ponente — Your APP Thinks I'm You: A Complete Kill Chain Against Mobile App Security"
   tags:
     - tag: Bypass Biométrico
     - tag: Investigación en Seguridad KYC
@@ -21,10 +21,10 @@
 - title: BSides Colombia
   title-url:
   date: 2026
-  subtitle: "Ponente — Your Brain > Your Toolkit: Real Bugs, Zero Code, Zero Tools"
+  subtitle: "Ponente — When Your Mind Becomes the Exploit: No Code, No Tools"
   tags:
-    - tag: Explotación de Fallos Lógicos
-    - tag: Zero Code, Zero Tools
+    - tag: Explotacion de Fallos Logicos
+    - tag: No Code, No Tools
   timeline-side: left
 
 - title: CAPIPEN (C-APIPen)
@@ -49,7 +49,7 @@
   date: Octubre 2024
   subtitle: "eJPT — INE (Exp. Oct 2027)"
   tags:
-    - tag: Junior Penetration Tester
+    - tag: Penetration Testing
   timeline-side: right
 
 - title: Unicomer Group

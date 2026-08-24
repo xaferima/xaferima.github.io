@@ -391,40 +391,33 @@ a {
     transition: opacity 0.5s;
   }
 
-  div[skill-type="language"] {
-    color: #e84a5f;
-  }
-
-  div[skill-type="framework"] {
-    color: #ff847c;
-  }
-
-  div[skill-type="tool"] {
-    color: #fecea8;
-  }
-
   div[skill-weight="1"] {
     font-size: 0.75rem;
     line-height: 0.25rem;
+    color: #ffc9d2;
   }
 
   div[skill-weight="2"] {
     font-size: 1.25rem;
     line-height: 0.75rem;
+    color: #ff9aa8;
   }
 
   div[skill-weight="3"] {
     font-size: 1.75rem;
     line-height: 1.25rem;
+    color: #ff5c73;
   }
 
   div[skill-weight="4"] {
     font-size: 2.25rem;
     line-height: 1.75rem;
+    color: #ff073a;
   }
 
   div[skill-weight="5"] {
     font-size: 2.75rem;
+    color: #ff073a;
     line-height: 2.25rem;
   }
 

@@ -4,7 +4,8 @@
 # title: This will be displayed as the website's name in your browser tab.
 title: XAFERIMA
 # description: This will be meta HTML tag content. This can be ignored.
-description: Personal website 
+description: Xavier Riofrio (xaferima) - Offensive Security Expert. Penetration testing across web, API, mobile and cloud. Security researcher and international speaker (DEF CON, BSides).
+description_es: Xavier Riofrio (xaferima) - Experto en Seguridad Ofensiva. Pentesting web, API, mobile y cloud. Investigador de seguridad y speaker internacional (DEF CON, BSides).
 # baseurl: The subpath of your site
 # > set this to "", if you renamed the repository to <user>.github.io
 baseurl: "" 
@@ -13,8 +14,8 @@ baseurl: ""
 username: Xavier Riofrío
 # typing_text: This will be typed before 'scroll down for more'.
 
-typing_text: <span>Offensive Security Expert, <br> Mobile Security | Web Pentesting, <br> KYC/Biometric Research.
-typing_text_es: <span>Experto en Seguridad Ofensiva, <br> Mobile Security | Web Pentesting, <br> Investigación KYC/Biométrica.
+typing_text: <span>Offensive Security Expert, <br> Web | API | Mobile | Cloud, <br> Researcher & Speaker.
+typing_text_es: <span>Experto en Seguridad Ofensiva, <br> Web | API | Mobile | Cloud, <br> Investigador & Speaker.
 # email: Your E-Mail address for the email button.  
 email: xaferima@gmail.com
 # For every social button you want to display, set your username or userid
@@ -35,8 +36,8 @@ show_aboutme_card: true
 about_me_title: WhoAmI
 about_me_title_es: WhoAmI
 # about_me_description: This will be displayed under the title.
-about_me_description: "Offensive Security Expert with a Master's degree in Cyber Security from the University of Birmingham and 10+ years of experience across mobile, API, cloud, and infrastructure security. Currently leading offensive security operations at a Latin American fintech, with deep specialization in Android security research — including RASP bypass, KYC biometric evasion, and mobile application reverse engineering using dynamic instrumentation.<br><br>Former security engineer at CERN, where I focused on web penetration testing and vulnerability analysis for critical research infrastructure. My work spans the full offensive security lifecycle: from attack surface reconnaissance and vulnerability discovery to exploitation, reporting, and remediation guidance. I hold industry certifications including CEH, eJPT, and CAPIPEN, and have presented original security research at international conferences including <b>DEF CON 34</b> (Las Vegas), <b>BSides Colombia</b>, and <b>PWN or DIE</b> (Ecuador). At DEF CON 34 I presented 'Your Bank Thinks I'm You: A Complete Kill Chain Against Mobile Banking Security', and at BSides Colombia and PWN or DIE I presented 'Your Brain > Your Toolkit: Real Bugs, Zero Code, Zero Tools', a talk on finding critical vulnerabilities through pure logical reasoning without automated tooling."
-about_me_description_es: "Experto en Seguridad Ofensiva con una Maestría en Ciberseguridad de la Universidad de Birmingham y más de 10 años de experiencia en seguridad móvil, API, cloud e infraestructura. Actualmente lidero operaciones de seguridad ofensiva en una fintech latinoamericana, con especialización en investigación de seguridad Android — incluyendo bypass de RASP, evasión biométrica KYC e ingeniería inversa de aplicaciones móviles mediante instrumentación dinámica.<br><br>Ex ingeniero de seguridad en el CERN, donde me enfoqué en pentesting web y análisis de vulnerabilidades para infraestructura crítica de investigación. Mi trabajo abarca todo el ciclo de vida de seguridad ofensiva: desde reconocimiento de superficie de ataque y descubrimiento de vulnerabilidades hasta explotación, reporte y guía de remediación. Poseo certificaciones CEH, eJPT y CAPIPEN, y he presentado investigación original en conferencias internacionales como <b>DEF CON 34</b> (Las Vegas), <b>BSides Colombia</b> y <b>PWN or DIE</b> (Ecuador). En DEF CON 34 presenté 'Your Bank Thinks I'm You: A Complete Kill Chain Against Mobile Banking Security', y en BSides Colombia y PWN or DIE presenté 'Your Brain > Your Toolkit: Real Bugs, Zero Code, Zero Tools', una charla sobre encontrar vulnerabilidades críticas mediante razonamiento lógico puro sin herramientas automatizadas."
+about_me_description: "Offensive security isn't about finding bugs — it's about proving what's actually exploitable. With 10+ years of experience spanning software development and security, I work across web, API, mobile, and cloud environments, helping teams identify real attack paths and turn findings into stronger security controls.<br><br>My focus is application security and penetration testing: exploiting business logic flaws, authentication and authorization weaknesses, and validating high-risk flows — then translating findings into remediation that engineering teams actually implement. I hold an MSc in Cyber Security with Distinction from the University of Birmingham and previously worked as a Security Engineer (Penetration Testing) at CERN.<br><br>Outside of work, I share what I learn with the community: speaking at well-known security conferences including <b>DEF CON 34</b> (Las Vegas), <b>BSides Colombia</b>, and <b>PWN or DIE</b> (Ecuador), publishing research, and creating open security testing resources."
+about_me_description_es: "La seguridad ofensiva no es encontrar bugs — es demostrar qué es realmente explotable. Con más de 10 años de experiencia entre desarrollo de software y seguridad, trabajo en entornos web, API, mobile y cloud, ayudando a equipos a identificar rutas de ataque reales y convertir hallazgos en controles de seguridad más fuertes.<br><br>Mi enfoque es la seguridad de aplicaciones y el penetration testing: explotar fallas de lógica de negocio, debilidades de autenticación y autorización, y validar flujos de alto riesgo — luego traduzco los hallazgos en remediación que los equipos de ingeniería realmente implementan. Tengo un MSc en Cyber Security con Distinción de la University of Birmingham y trabajé como Security Engineer (Penetration Testing) en el CERN.<br><br>Fuera del trabajo, comparto lo que aprendo con la comunidad: hablando en conferencias de seguridad reconocidas como <b>DEF CON 34</b> (Las Vegas), <b>BSides Colombia</b> y <b>PWN or DIE</b> (Ecuador), publicando investigación y creando recursos abiertos de security testing."
 
 # SKILLS SECTION
 # show_skills_card:
@@ -57,7 +58,7 @@ timeline_title: Education & Experience
 timeline_title_es: Educación & Experiencia
 # cv_download_link: The link where you host your cv.
 # > e.g. you share your cv on your dropbox, then add the dropbox link here
-cv_download_link: /assets/pdf/CV_XAVIER_RIOFRIO_EN_MAY_2026_FULL.pdf
+cv_download_link: /assets/pdf/CV-XAVIER-RIOFRIO.pdf
 
 # PROJECTS SECTION
 # show_projects_card:
@@ -98,11 +99,13 @@ posts_title_es: Blog personal
 # show_PAPERS_card:
 # > setting this to true, will display the PAPERS section
 # > setting this to false, will omit the PAPERS section
-show_papers_card: false
+show_papers_card: true
 # about_me_title: The will be displayed as the title in the About Me section
-papers_title: s
+papers_title: Speaking
 # about_me_description: This will be displayed under the title.
-papers_description: sI am a Computer Science engineer interested and enthusiastic about everything that entails cybersecurity, especially in offensive security. A skilled professional with around 8 years of IT experience, and 4+ years in the Cybersecurity area.<br> <br>Strong skills in offensive security for penetration testing including reconnaissance, OSINT, vulnerability identification, exploitation, automation, etc. Seasoned interpersonal skills, strong work ethics, and ability to work with different groups in both languages English and Spanish.
+papers_description: "Conferences where I've presented original research:<br><br><b>DEF CON 34</b> — Las Vegas, USA (2026): <i>Your APP Thinks I'm You: A Complete Kill Chain Against Mobile App Security</i> — <a href='https://info.defcon.org/defcon34/content/?id=66601'>talk info</a><br><b>BSides Colombia</b> (2026): <i>Your Brain > Your Toolkit: Real Bugs, Zero Code, Zero Tools</i><br><b>PWN OR DIE</b> — Ecuador (2025): <i>When Your Mind Becomes the Exploit: No Code, No Tools</i>"
+papers_title_es: Charlas
+papers_description_es: "Conferencias donde he presentado investigacion original:<br><br><b>DEF CON 34</b> — Las Vegas, USA (2026): <i>Your APP Thinks I'm You: A Complete Kill Chain Against Mobile App Security</i> — <a href='https://info.defcon.org/defcon34/content/?id=66601'>info de la charla</a><br><b>BSides Colombia</b> (2026): <i>Your Brain > Your Toolkit: Real Bugs, Zero Code, Zero Tools</i><br><b>PWN OR DIE</b> — Ecuador (2025): <i>When Your Mind Becomes the Exploit: No Code, No Tools</i>"
 
 
 # CONTACT SECTION
@@ -114,13 +117,13 @@ show_contact_card: true
 contact_title: Contact
 contact_title_es: Contacto
 # contact_description: This will be displayed under the title.
-contact_description: "Please, contact me for anything related to information security. <br><center><script src=\"https://tryhackme.com/badge/269565\"></script></center><div style=\"display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-top:10px;\"><div style=\"text-align:center;\"><a href=\"https://lnkd.in/dVbEZa9H\" target=\"_blank\"><img src=\"/assets/img/CEH.png\" alt=\"CEH\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">CEH</div></a></div><div style=\"text-align:center;\"><a href=\"https://certs.ine.com/401b732f-7bbe-4ebf-af21-5ccdb6b68442#gs.g47k9g#acc.YVPWDmlU\" target=\"_blank\"><img src=\"/assets/img/eJPT.png\" alt=\"eJPT (INE)\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">eJPT (INE)</div></a></div><div style=\"text-align:center;\"><a href=\"https://pentestingexams.com/certificate-validation/\" target=\"_blank\"><img src=\"/assets/img/secops.png\" alt=\"CAPIPEN (SecOps Group)\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">CAPIPEN (SecOps Group)</div></a></div></div>"
-contact_description_es: "Por favor, para más información o consulta se puede contactar por cualquier medio a continuación. <br><center><script src=\"https://tryhackme.com/badge/269565\"></script></center><div style=\"display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-top:10px;\"><div style=\"text-align:center;\"><a href=\"https://lnkd.in/dVbEZa9H\" target=\"_blank\"><img src=\"/assets/img/CEH.png\" alt=\"CEH\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">CEH</div></a></div><div style=\"text-align:center;\"><a href=\"https://certs.ine.com/401b732f-7bbe-4ebf-af21-5ccdb6b68442#gs.g47k9g#acc.YVPWDmlU\" target=\"_blank\"><img src=\"/assets/img/eJPT.png\" alt=\"eJPT (INE)\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">eJPT (INE)</div></a></div><div style=\"text-align:center;\"><a href=\"https://pentestingexams.com/certificate-validation/\" target=\"_blank\"><img src=\"/assets/img/secops.png\" alt=\"CAPIPEN (SecOps Group)\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">CAPIPEN (SecOps Group)</div></a></div></div>"
+contact_description: "Open to research collaborations, conference speaking, and security consulting - feel free to reach out through any of the channels below. <br><center><script src=\"https://tryhackme.com/badge/269565\"></script></center><div style=\"display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-top:10px;\"><div style=\"text-align:center;\"><a href=\"https://lnkd.in/dVbEZa9H\" target=\"_blank\"><img src=\"/assets/img/CEH.png\" alt=\"CEH\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">CEH</div></a></div><div style=\"text-align:center;\"><a href=\"https://certs.ine.com/401b732f-7bbe-4ebf-af21-5ccdb6b68442#gs.g47k9g#acc.YVPWDmlU\" target=\"_blank\"><img src=\"/assets/img/eJPT.png\" alt=\"eJPT (INE)\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">eJPT (INE)</div></a></div><div style=\"text-align:center;\"><a href=\"https://pentestingexams.com/certificate-validation/\" target=\"_blank\"><img src=\"/assets/img/secops.png\" alt=\"CAPIPEN (SecOps Group)\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">CAPIPEN (SecOps Group)</div></a></div></div>"
+contact_description_es: "Abierto a colaboraciones de investigacion, charlas en conferencias y consultoria de seguridad - puedes contactarme por cualquiera de los medios a continuacion. <br><center><script src=\"https://tryhackme.com/badge/269565\"></script></center><div style=\"display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-top:10px;\"><div style=\"text-align:center;\"><a href=\"https://lnkd.in/dVbEZa9H\" target=\"_blank\"><img src=\"/assets/img/CEH.png\" alt=\"CEH\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">CEH</div></a></div><div style=\"text-align:center;\"><a href=\"https://certs.ine.com/401b732f-7bbe-4ebf-af21-5ccdb6b68442#gs.g47k9g#acc.YVPWDmlU\" target=\"_blank\"><img src=\"/assets/img/eJPT.png\" alt=\"eJPT (INE)\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">eJPT (INE)</div></a></div><div style=\"text-align:center;\"><a href=\"https://pentestingexams.com/certificate-validation/\" target=\"_blank\"><img src=\"/assets/img/secops.png\" alt=\"CAPIPEN (SecOps Group)\" style=\"width:120px;height:auto;\"><div style=\"font-size:0.75em;margin-top:5px;\">CAPIPEN (SecOps Group)</div></a></div></div>"
 
 # GITHUB-METADATA
 # Set this to your forked repository
 # > e.g. <user>/<user>.github.io
-repository: longpdo/neumorphism
+repository: xaferima/xaferima.github.io
 projects:
   # sortby:
   # > set this to pushed, if you want to sort your github repositories by time.
@@ -148,8 +151,7 @@ google-analytics:
 
 ### END OF VALUES YOU SHOULD CHANGE ###
 
-plugins:
-  - "jekyll-github-metadata"
+plugins: []
 
 exclude:
   [

@@ -9,6 +9,13 @@
 
   <title>{{ site.title }}</title>
   <meta name="description" content="{{ site.description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Xavier Riofrio — Offensive Security Expert">
+  <meta property="og:description" content="{{ site.description }}">
+  <meta property="og:url" content="https://xaferima.com/">
+  <meta property="og:image" content="https://xaferima.com/assets/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@xaferima">
 
   <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/favicon/apple-touch-icon.png" | prepend: site.baseurl }}">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ "/assets/favicon/favicon-32x32.png" | prepend: site.baseurl }}">
@@ -22,7 +29,22 @@
   <script src="{{ "/assets/js/app.min.js" | prepend: site.baseurl }}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <style>.landing-title h1{line-height:1.1!important}</style>
-  <script>if('/'===location.pathname&&location.search.indexOf('normal')===-1&&Math.random()<.5)location.href='/xmen97'</script>
+  <script>if('/'===location.pathname&&location.search.indexOf('normal')===-1&&Math.random()<.75)location.href='/xmen97'</script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Xavier Riofrio",
+    "url": "https://xaferima.com",
+    "jobTitle": "Offensive Security Expert",
+    "sameAs": [
+      "https://www.linkedin.com/in/xaferima",
+      "https://github.com/xaferima",
+      "https://medium.com/@xaferima",
+      "https://twitter.com/xaferima"
+    ]
+  }
+  </script>
 </head>
  
 <body>
@@ -45,11 +67,6 @@
         {% include section-aboutme.html %}
       </section>
     {% endif %}
-    {%if site.show_skills_card %}
-      <section class="card neumorphism-card-big">
-        {% include section-skills.html %}
-      </section>
-    {% endif %}
     {%if site.show_timeline_card %}
       <section class="card neumorphism-card-big">
         {% include section-timeline.html %}
@@ -63,6 +80,11 @@
     {%if site.show_papers_card %}
       <section class="card neumorphism-card-big">
         {% include section-papers.html %}
+      </section>
+    {% endif %}
+    {%if site.show_skills_card %}
+      <section class="card neumorphism-card-big">
+        {% include section-skills.html %}
       </section>
     {% endif %}
     {%if site.show_posts_card %}
