@@ -16,3 +16,7 @@
   weight: 2
 - name: Network Security
   weight: 1
+- name: AI-Augmented Security
+  weight: 3
+- name: OWASP LLM Top 10
+  weight: 2

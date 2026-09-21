@@ -21,11 +21,20 @@
 - title: BSides Colombia
   title-url:
   date: 2026
-  subtitle: "Ponente — When Your Mind Becomes the Exploit: No Code, No Tools"
+  subtitle: "Ponente — Your Brain > Your Toolkit: Real Bugs, Zero Code, Zero Tools"
   tags:
     - tag: Explotacion de Fallos Logicos
     - tag: No Code, No Tools
   timeline-side: left
+
+- title: PWN OR DIE
+  title-url:
+  date: 2026
+  subtitle: "Ponente — Frustration Kill Chain: un framework para depurar rechazo en seguridad ofensiva"
+  tags:
+    - tag: Resiliencia Profesional
+    - tag: Seguridad Ofensiva
+  timeline-side: right
 
 - title: CAPIPEN (C-APIPen)
   title-url: "https://pentestingexams.com/certificate-validation/"
