@@ -81,6 +81,11 @@
         {% include section-papers-es.html %}
       </section>
     {% endif %}
+    {%if site.show_cves_card %}
+      <section class="card neumorphism-card-big">
+        {% include section-cves-es.html %}
+      </section>
+    {% endif %}
     {%if site.show_skills_card %}
       <section class="card neumorphism-card-big">
         {% include section-skills-es.html %}

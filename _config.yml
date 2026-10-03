@@ -108,6 +108,21 @@ papers_title_es: Charlas
 papers_description_es: "Conferencias donde he presentado investigacion original:<br><br><b>DEF CON 34</b> — Las Vegas, USA (2026): <i>Your APP Thinks I'm You: A Complete Kill Chain Against Mobile App Security</i> — <a href='https://info.defcon.org/defcon34/content/?id=66601'>info de la charla</a><br><b>BSides Colombia</b> (2026): <i>Your Brain > Your Toolkit: Real Bugs, Zero Code, Zero Tools</i><br><b>PWN OR DIE</b> — Ecuador (2026): <i>Frustration Kill Chain: un framework para depurar rechazo en seguridad ofensiva</i><br><b>PWN OR DIE</b> — Ecuador (2025): <i>When Your Mind Becomes the Exploit: No Code, No Tools</i>"
 
 
+# CVES SECTION
+# show_cves_card:
+# > setting this to true, will display the CVEs section
+# > setting this to false, will omit the CVEs section
+show_cves_card: true
+# cves_title: The will be displayed as the title in the CVEs section
+cves_title: CVEs
+# cves_title_es: The will be displayed as the title in the CVEs section (Spanish)
+cves_title_es: Vulnerabilidades
+# cves_description: This will be displayed under the title.
+cves_description: "Coordinated vulnerability disclosures:<br><br><b>CVE-2026-105080</b> — <i>RCE via calibre .recipe in ConvertX</i> — CVSS 9.4 CRITICAL, CWE-94 — <a href='https://www.cve.org/CVERecord?id=CVE-2026-105080'>CVE record</a><br>Discovered, exploited, and coordinated disclosure with the maintainer. Fixed in v0.19.0."
+# cves_description_es: This will be displayed under the title (Spanish).
+cves_description_es: "Divulgaciones coordinadas de vulnerabilidades:<br><br><b>CVE-2026-105080</b> — <i>RCE via calibre .recipe en ConvertX</i> — CVSS 9.4 CRITICAL, CWE-94 — <a href='https://www.cve.org/CVERecord?id=CVE-2026-105080'>registro CVE</a><br>Descubierta, explotada y divulgada coordinadamente con el mantenedor. Corregida en v0.19.0."
+
+
 # CONTACT SECTION
 # show_contact_card:
 # > setting this to true, will display the Contact section
