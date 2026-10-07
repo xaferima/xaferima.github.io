@@ -118,9 +118,9 @@ cves_title: CVEs
 # cves_title_es: The will be displayed as the title in the CVEs section (Spanish)
 cves_title_es: Vulnerabilidades
 # cves_description: This will be displayed under the title.
-cves_description: "Coordinated vulnerability disclosures:<br><br><b>CVE-2026-105080</b> — <i>RCE via calibre .recipe in ConvertX</i> — CVSS 9.4 CRITICAL, CWE-94 — <a href='https://www.cve.org/CVERecord?id=CVE-2026-105080'>CVE record</a><br>Discovered, exploited, and coordinated disclosure with the maintainer. Fixed in v0.19.0."
+cves_description: "Coordinated vulnerability disclosures across ConvertX and pdfcpu — discovered, exploited, and coordinated disclosure with the maintainers."
 # cves_description_es: This will be displayed under the title (Spanish).
-cves_description_es: "Divulgaciones coordinadas de vulnerabilidades:<br><br><b>CVE-2026-105080</b> — <i>RCE via calibre .recipe en ConvertX</i> — CVSS 9.4 CRITICAL, CWE-94 — <a href='https://www.cve.org/CVERecord?id=CVE-2026-105080'>registro CVE</a><br>Descubierta, explotada y divulgada coordinadamente con el mantenedor. Corregida en v0.19.0."
+cves_description_es: "Divulgaciones coordinadas de vulnerabilidades en ConvertX y pdfcpu — descubiertas, explotadas y divulgadas coordinadamente con los mantenedores."
 
 
 # CONTACT SECTION
