@@ -1,0 +1,96 @@
+---
+layout: reporte
+title: "GHSA-w2hj-54mc-76r4 — Integer overflow in XRef stream /W array (pdfcpu)"
+description: "Integer overflow in the XRef stream /W array sum causes an unrecovered panic (DoS) in pdfcpu. CVSS 7.5 HIGH. Fixed in v0.16.0."
+permalink: /reportes/GHSA-w2hj-54mc-76r4/
+---
+
+<h1>Integer overflow in XRef stream /W array</h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">DoS</span>
+  <span class="badge badge-sev-high">CVSS 7.5 HIGH</span>
+  <span class="badge badge-cwe">CWE-190: Integer Overflow or Wraparound</span>
+  <span class="badge badge-id">pdfcpu/pdfcpu &lt; v0.16.0</span>
+</div>
+
+<p>
+  <a href="https://github.com/pdfcpu/pdfcpu/security/advisories/GHSA-w2hj-54mc-76r4">GHSA-w2hj-54mc-76r4</a> · CVE assignment pending
+</p>
+
+<h2>Summary</h2>
+
+<p>An integer overflow in the cross-reference stream <code>/W</code> array sum calculation allows any unauthenticated attacker to crash any application using pdfcpu by providing a crafted PDF file. The overflow produces a small positive entry length that bypasses the modulo integrity check, after which out-of-bounds slice reads trigger an unrecovered <code>panic: runtime error: slice bounds out of range</code>. The panic escapes the public API and kills the host process.</p>
+
+<h2>Impact</h2>
+
+<ul>
+  <li><strong>Denial of Service</strong> — unrecovered runtime panic terminates the process.</li>
+  <li><strong>Attack vector:</strong> network — malicious PDF via upload, email attachment, or any processing pipeline.</li>
+  <li><strong>No authentication required</strong>; user interaction limited to the victim processing the file.</li>
+  <li><strong>Scope:</strong> any application embedding pdfcpu (CLI, HTTP services, libraries) and downstream Go projects.</li>
+</ul>
+
+<h2>Root Cause</h2>
+
+<p>In <code>pkg/pdfcpu/read.go</code>, <code>extractXRefTableEntriesFromXRefStream()</code> computes the cross-reference entry length by summing three attacker-controlled values from the <code>/W</code> array with no overflow check:</p>
+
+<pre><code class="language-go">// pkg/pdfcpu/read.go:710
+i1 := xsd.W[0]
+i2 := xsd.W[1]
+i3 := xsd.W[2]
+xrefEntryLen := i1 + i2 + i3  // ← no overflow check
+</code></pre>
+
+<p>The values are validated only for non-negativity at parse time (<code>pkg/pdfcpu/model/parse.go</code>). When the sum overflows <code>int64</code> to a small positive value (e.g. <code>1</code>), the modulo validation passes but the individual <code>W</code> values remain huge, so later slice operations read far beyond the buffer:</p>
+
+<pre><code class="language-go">// read.go:763-766 — bufToInt64(buf[i : i+i1]) with i1 ≈ 6.1e18
+</code></pre>
+
+<h2>Proof of Concept</h2>
+
+<p>Craft an XRef stream whose <code>/W</code> values overflow when summed:</p>
+
+<pre><code class="language-text">W = [6148914691236517205, 6148914691236517205, 6148914691236517207]
+mathematical sum: 18446744073709551617
+int64 overflow:   1  → passes modulo check
+actual slices:    buf[i : i+6148914691236517205] → PANIC
+</code></pre>
+
+<p>Confirmed with a unit test against the vulnerable function:</p>
+
+<pre><code class="language-text">=== RUN   TestXRefWArrayOverflow/overflow_to_one
+    PANIC: runtime error: slice bounds out of range
+           [:6148914691236517205] with capacity 3
+</code></pre>
+
+<p>A minimal PDF embedding such an XRef stream crashes <code>pdfcpu validate</code>, <code>pdfcpu merge</code>, and any <code>api.ReadContext()</code> call on the file.</p>
+
+<h2>Disclosure Timeline</h2>
+
+<table>
+  <thead><tr><th>Date</th><th>Event</th></tr></thead>
+  <tbody>
+    <tr><td>2026-09-13</td><td>Report submitted via GitHub Private Vulnerability Reporting</td></tr>
+    <tr><td>2026-09-14</td><td>Accepted by maintainer (hhrutter)</td></tr>
+    <tr><td>2026-09-28</td><td>Advisory published — GHSA-w2hj-54mc-76r4</td></tr>
+    <tr><td>Fixed in</td><td>pdfcpu v0.16.0</td></tr>
+  </tbody>
+</table>
+
+<h2>Fix</h2>
+
+<p>Use the codebase's existing <code>safemath.AddInt</code> for the <code>W</code> array sum and reject overflows:</p>
+
+<pre><code class="language-go">// After (safe):
+xrefEntryLen, err := safemath.AddInt(i1, i2)
+if err != nil {
+    return errInvalidXRefStreamWArray
+}
+xrefEntryLen, err = safemath.AddInt(xrefEntryLen, i3)
+if err != nil {
+    return errInvalidXRefStreamWArray
+}
+</code></pre>
+
+<p><em>Fixed in pdfcpu v0.16.0. Advisory published 2026-09-28; CVE assignment pending.</em></p>

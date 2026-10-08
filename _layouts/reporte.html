@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{{ page.title }} · {{ site.title }}</title>
+  <meta name="description" content="{{ page.description }}">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/favicon/apple-touch-icon.png" | prepend: site.baseurl }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ "/assets/favicon/favicon-32x32.png" | prepend: site.baseurl }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ "/assets/favicon/favicon-16x16.png" | prepend: site.baseurl }}">
+  <link rel="manifest" href="{{ "/assets/favicon/site.webmanifest" | prepend: site.baseurl }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ "/assets/css/main.min.css" | prepend: site.baseurl }}">
+  <link rel="stylesheet" href="{{ "/assets/css/vendors.min.css" | prepend: site.baseurl }}">
+  <link rel="stylesheet" href="{{ "/assets/css/reportes.css" | prepend: site.baseurl }}">
+
+  <script src="{{ "/assets/js/vendors.min.js" | prepend: site.baseurl }}"></script>
+  <script>if(window.particlesJS)window.particlesJS.load=function(){};</script>
+  <script src="{{ "/assets/js/app.min.js" | prepend: site.baseurl }}"></script>
+</head>
+
+<body>
+  <div id="preloader">
+    <div class="load">
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+    </div>
+  </div>
+  <div style="display:flex;justify-content:space-between;padding:0.5rem 1rem;">
+    <a href="/reportes" style="color:#ff073a;">← Reports</a>
+    <span style="font-weight:bold;"><a href="/" style="color:#ff073a;text-decoration:none;">xaferima.com</a></span>
+    <a href="/index-es.html" style="color:#ff073a;">Español →</a>
+  </div>
+
+  <main class="reporte-container">
+    <article class="card neumorphism-card-big reporte-card">
+      {{ content }}
+    </article>
+  </main>
+
+  <div style="text-align:center;padding:1rem;">
+    <a href="/reportes" style="color:#ff073a;">← Back to all reports</a>
+  </div>
+
+  {% include footer.html %}
+</body>
+</html>

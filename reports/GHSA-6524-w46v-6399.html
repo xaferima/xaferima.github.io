@@ -1,0 +1,102 @@
+---
+layout: reporte
+title: "GHSA-6524-w46v-6399 — Index-out-of-range panics in PDF image renderers (pdfcpu)"
+description: "Missing input validation in pdfcpu image renderers causes index-out-of-range panics (DoS) with bpc 9..16 and short Indexed lookups. CVSS 6.5 MEDIUM. Fixed in v0.16.1."
+permalink: /reportes/GHSA-6524-w46v-6399/
+---
+
+<h1>Index-out-of-range panics in image renderers</h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">DoS</span>
+  <span class="badge badge-sev-medium">CVSS 6.5 MEDIUM</span>
+  <span class="badge badge-cwe">CWE-129: Improper Validation of Array Index</span>
+  <span class="badge badge-id">pdfcpu/pdfcpu ≤ v0.16.0</span>
+</div>
+
+<p>
+  <a href="https://github.com/pdfcpu/pdfcpu/security/advisories/GHSA-6524-w46v-6399">GHSA-6524-w46v-6399</a> · CVE assignment pending
+</p>
+
+<h2>Summary</h2>
+
+<p>Missing input validation in pdfcpu's grayscale and Indexed image renderers allows a crafted PDF to crash any application that extracts or renders images. Images with <code>BitsPerComponent</code> values of 9..16 freeze the packed-pixel loop (<code>8/bpc == 0</code> via integer division), so the pixel counter never advances while the byte cursor walks off the image buffer. Independently, Indexed color-space images with a short lookup palette index out of bounds. Both paths raise an unrecovered <code>index out of range</code> runtime panic, killing the host process — <code>fault.Catch</code> only recovers internal <code>fault.Panic</code> values, not <code>runtime.Error</code>.</p>
+
+<h2>Impact</h2>
+
+<ul>
+  <li><strong>Denial of Service</strong> — unrecovered runtime panic terminates the process.</li>
+  <li><strong>Attack vector:</strong> network — small crafted PDF via upload; no authentication.</li>
+  <li><strong>Scope:</strong> <code>api.ExtractImages</code>, <code>RenderImage</code>, <code>WriteImage</code> — any image-processing pipeline using pdfcpu.</li>
+</ul>
+
+<h2>Root Cause</h2>
+
+<p>In <code>pkg/pdfcpu/writeImage.go</code>, <code>renderDeviceGrayToPNG()</code> (and its Indexed siblings) runs a packed-pixel loop that assumes <code>bpc</code> divides 8:</p>
+
+<pre><code class="language-go">// writeImage.go:393 (same shape at 559, 606, 640, 668)
+i := 0
+for y := 0; y &lt; im.h; y++ {
+    for x := 0; x &lt; im.w; {
+        p := b[i]   // ← panics once i &gt;= len(b)
+        for j := 0; j &lt; 8/im.bpc &amp;&amp; x &lt; im.w; j++ { ... x++ }
+        i++
+    }
+}
+</code></pre>
+
+<p>With <code>bpc &gt; 8</code>, <code>8/im.bpc == 0</code>: the inner loop never executes, <code>x</code> never advances, and <code>i</code> walks off the end of <code>b</code>. Image validation only rejects <code>bpc &lt;= 0</code> plus size limits — there is <strong>no upper bound</strong> on <code>bpc</code>, and the declared <code>ErrUnsupported16BPC</code> error is never raised in the vulnerable version.</p>
+
+<p>The second sink indexes a short Indexed lookup palette without a length check (the CalRGB branch performs no validation at all):</p>
+
+<pre><code class="language-go">// writeImage.go:606 — renderIndexedRGBToPNG
+l := 3 * int(ind)
+img.Set(x, y, color.NRGBA{R: lookup[l], G: lookup[l+1], B: lookup[l+2], A: alpha})
+</code></pre>
+
+<h2>Proof of Concept</h2>
+
+<p>Two independent crashes, each confirmed at three levels (direct sink, public entry point, end-to-end PDF):</p>
+
+<pre><code class="language-text"># Sink 1: bpc 9..16
+PDFImage{bpc: 9, w: 2, h: 1, Content: 8 bytes}
+→ panic: index out of range [8] with length 8
+
+# Sink 2: Indexed/CalRGB with 3-byte palette, first image byte 0xFF
+[/Indexed [/CalRGB] 0 &lt;000000&gt;], image byte 0xFF
+→ l = 765 on a 3-byte slice
+→ panic: index out of range [765] with length 3
+
+# End-to-end: crafted PDF parses cleanly (api.ReadContext OK),
+# then api.ExtractImages panics — fault.Catch does not recover it.
+</code></pre>
+
+<p>The finding was discovered with LLM-assisted review (Strix) and independently replicated with local unit and end-to-end tests against pdfcpu v0.15.0.</p>
+
+<h2>Disclosure Timeline</h2>
+
+<table>
+  <thead><tr><th>Date</th><th>Event</th></tr></thead>
+  <tbody>
+    <tr><td>2026-09-21</td><td>Vulnerability discovered and PoC-confirmed (3-tier local reproduction)</td></tr>
+    <tr><td>2026-10-03</td><td>Report submitted via GitHub Private Vulnerability Reporting</td></tr>
+    <tr><td>2026-10-04</td><td>Advisory published — GHSA-6524-w46v-6399</td></tr>
+    <tr><td>Fixed in</td><td>pdfcpu v0.16.1</td></tr>
+  </tbody>
+</table>
+
+<h2>Fix</h2>
+
+<p>Reject <code>bpc &gt; 8</code> in the renderer entry point and validate lookup-palette length against the index range:</p>
+
+<pre><code class="language-go">// Reject unsupported bit depths before the packed loop:
+if im.bpc &lt;= 0 || im.bpc &gt; 8 {
+    return ErrUnsupportedBitDepth
+}
+// Validate palette size before indexed lookup:
+if len(lookup) &lt; n &lt;&lt; bpc {
+    return errShortLookupTable
+}
+</code></pre>
+
+<p><em>Fixed in pdfcpu v0.16.1. Advisory published 2026-10-04; CVE assignment pending.</em></p>

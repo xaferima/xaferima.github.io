@@ -1,0 +1,88 @@
+---
+layout: reporte
+title: "GHSA-fjh6-rrhv-4g63 — XRef tables bypass configured limits (pdfcpu)"
+description: "Traditional cross-reference tables bypass configured XRef limits causing unbounded memory growth (DoS) in pdfcpu. CVSS 6.5 MEDIUM. Fixed in v0.16.0."
+permalink: /reportes/GHSA-fjh6-rrhv-4g63/
+---
+
+<h1>XRef tables bypass configured limits</h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">DoS</span>
+  <span class="badge badge-sev-medium">CVSS 6.5 MEDIUM</span>
+  <span class="badge badge-cwe">CWE-770: Allocation of Resources Without Limits</span>
+  <span class="badge badge-id">pdfcpu/pdfcpu ≤ v0.15.0</span>
+</div>
+
+<p>
+  <a href="https://github.com/pdfcpu/pdfcpu/security/advisories/GHSA-fjh6-rrhv-4g63">GHSA-fjh6-rrhv-4g63</a> · CVE assignment pending
+</p>
+
+<h2>Summary</h2>
+
+<p>pdfcpu enforces configured cross-reference resource limits (<code>MaxObjectCount</code>, <code>MaxXRefEntries</code>) when parsing XRef <em>streams</em> (PDF 1.5+), but the legacy code path for traditional XRef <em>tables</em> (PDF 1.4 and earlier) never validates the subsection object count. A crafted PDF declaring a huge <code>objCount</code> with matching entries forces the cross-reference map to grow without bound, exhausting process memory and crashing any host application.</p>
+
+<h2>Impact</h2>
+
+<ul>
+  <li><strong>Denial of Service</strong> via memory exhaustion — process OOM or severe degradation.</li>
+  <li><strong>Attack vector:</strong> network — malicious PDF via upload or attachment.</li>
+  <li><strong>Bypass of intended control:</strong> the resource-limit configuration is silently not applied on the legacy path.</li>
+  <li><strong>Scope:</strong> any application using pdfcpu to process untrusted PDFs.</li>
+</ul>
+
+<h2>Root Cause</h2>
+
+<p>In <code>pkg/pdfcpu/read.go</code>, <code>parseXRefTableSubSection()</code> reads the subsection object count with <code>strconv.Atoi</code> and never checks it against the configured limits. Each valid xref entry then inserts into the cross-reference map, which grows unbounded:</p>
+
+<pre><code class="language-go">// pkg/pdfcpu/read.go:445 — no limit check
+objCount, err := strconv.Atoi(fields[1])
+
+// read.go:424 — every entry grows the map
+xRefTable.Table[objNr] = &entry
+</code></pre>
+
+<p>By contrast, XRef streams enforce <code>MaxObjectCount = 10M</code> in <code>xRefStreamSize()</code> (<code>model/parse.go</code>) — the traditional-table path simply lacks the equivalent check.</p>
+
+<h2>Proof of Concept</h2>
+
+<p>A crafted PDF with a traditional XRef table:</p>
+
+<pre><code class="language-text">xref
+0 100000000        ← objCount = 100M, never validated
+0000000000 65535 f
+0000000010 00000 n
+...                ← attacker supplies matching entries
+trailer &lt;&lt; /Size 100000001 /Root 1 0 R &gt;&gt;
+</code></pre>
+
+<p>Each ~30-byte entry creates a map entry costing ~128 bytes of Go map overhead. 100M entries → multi-GB memory growth → OOM kill. Mitigating constraints: the loop stops on the first line without 3 fields, and the attacker must provide enough well-formed entries to match <code>objCount</code>, so the attack requires a large (GB-scale) file — but memory amplification is roughly 4×.</p>
+
+<h2>Disclosure Timeline</h2>
+
+<table>
+  <thead><tr><th>Date</th><th>Event</th></tr></thead>
+  <tbody>
+    <tr><td>2026-09-18</td><td>Report submitted via GitHub Private Vulnerability Reporting</td></tr>
+    <tr><td>2026-09-18</td><td>Accepted by maintainer; retitled <em>"Traditional cross-reference tables bypass configured XRef limits"</em></td></tr>
+    <tr><td>2026-09-28</td><td>Advisory published — GHSA-fjh6-rrhv-4g63</td></tr>
+    <tr><td>Fixed in</td><td>pdfcpu v0.16.0</td></tr>
+  </tbody>
+</table>
+
+<h2>Fix</h2>
+
+<p>Validate <code>objCount</code> against <code>MaxObjectCount</code> on the traditional-table path, mirroring the XRef-stream enforcement:</p>
+
+<pre><code class="language-go">// After (safe):
+objCount, err := strconv.Atoi(fields[1])
+if err != nil {
+    return "", err
+}
+if objCount &gt; limits.MaxObjectCount {
+    return "", fmt.Errorf("xref subsection objCount %d exceeds limit %d",
+        objCount, limits.MaxObjectCount)
+}
+</code></pre>
+
+<p><em>Fixed in pdfcpu v0.16.0. Advisory published 2026-09-28; CVE assignment pending.</em></p>

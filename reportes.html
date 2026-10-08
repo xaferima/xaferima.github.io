@@ -1,0 +1,104 @@
+---
+layout: null
+permalink: /reportes/
+---
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Security Reports · {{ site.title }}</title>
+  <meta name="description" content="Technical writeups of coordinated vulnerability disclosures — CVEs and GitHub Security Advisories.">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/favicon/apple-touch-icon.png" | prepend: site.baseurl }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ "/assets/favicon/favicon-32x32.png" | prepend: site.baseurl }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ "/assets/favicon/favicon-16x16.png" | prepend: site.baseurl }}">
+  <link rel="manifest" href="{{ "/assets/favicon/site.webmanifest" | prepend: site.baseurl }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ "/assets/css/main.min.css" | prepend: site.baseurl }}">
+  <link rel="stylesheet" href="{{ "/assets/css/vendors.min.css" | prepend: site.baseurl }}">
+  <link rel="stylesheet" href="{{ "/assets/css/reportes.css" | prepend: site.baseurl }}">
+
+  <script src="{{ "/assets/js/vendors.min.js" | prepend: site.baseurl }}"></script>
+  <script>if(window.particlesJS)window.particlesJS.load=function(){};</script>
+  <script src="{{ "/assets/js/app.min.js" | prepend: site.baseurl }}"></script>
+</head>
+
+<body>
+  <div id="preloader">
+    <div class="load">
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+    </div>
+  </div>
+  <div style="display:flex;justify-content:space-between;padding:0.5rem 1rem;">
+    <a href="/" style="color:#ff073a;">← Home</a>
+    <span style="font-weight:bold;"><a href="/" style="color:#ff073a;text-decoration:none;">xaferima.com</a></span>
+    <a href="/index-es.html" style="color:#ff073a;">Español →</a>
+  </div>
+
+  <main class="reporte-container">
+    <article class="card neumorphism-card-big reporte-card">
+      <h1>🔒 Security Reports</h1>
+      <p>Technical writeups of coordinated vulnerability disclosures — discovered, exploited, and reported to maintainers before public release. All issues were fixed by the vendors.</p>
+
+      <div class="reportes-grid">
+        <a class="reporte-tile" href="/reportes/CVE-2026-105080/">
+          <span class="tile-tipo">RCE</span>
+          <div class="tile-id">CVE-2026-105080</div>
+          <div class="tile-prod">C4illin/ConvertX</div>
+          <div class="tile-desc">Remote code execution via calibre <code>.recipe</code> upload — Python <code>exec</code> as root.</div>
+          <div class="tile-sev sev-critical">CVSS 9.4 CRITICAL</div>
+          <span class="tile-more">Read more →</span>
+        </a>
+
+        <a class="reporte-tile" href="/reportes/GHSA-w2hj-54mc-76r4/">
+          <span class="tile-tipo">DoS</span>
+          <div class="tile-id">GHSA-w2hj-54mc-76r4 · CVE pending</div>
+          <div class="tile-prod">pdfcpu/pdfcpu</div>
+          <div class="tile-desc">Integer overflow in XRef stream <code>/W</code> array sum causes unrecovered panic.</div>
+          <div class="tile-sev sev-high">CVSS 7.5 HIGH</div>
+          <span class="tile-more">Read more →</span>
+        </a>
+
+        <a class="reporte-tile" href="/reportes/GHSA-fjh6-rrhv-4g63/">
+          <span class="tile-tipo">DoS</span>
+          <div class="tile-id">GHSA-fjh6-rrhv-4g63 · CVE pending</div>
+          <div class="tile-prod">pdfcpu/pdfcpu</div>
+          <div class="tile-desc">Traditional XRef tables bypass configured limits — unbounded memory growth.</div>
+          <div class="tile-sev sev-medium">CVSS 6.5 MEDIUM</div>
+          <span class="tile-more">Read more →</span>
+        </a>
+
+        <a class="reporte-tile" href="/reportes/GHSA-g766-88fx-58h8/">
+          <span class="tile-tipo">Overflow</span>
+          <div class="tile-id">GHSA-g766-88fx-58h8 · CVE pending</div>
+          <div class="tile-prod">pdfcpu/pdfcpu</div>
+          <div class="tile-desc">Integer overflow in image buffer allocation (<code>w*h*N</code>) — defense-in-depth.</div>
+          <div class="tile-sev sev-medium">CVSS 5.9 MEDIUM</div>
+          <span class="tile-more">Read more →</span>
+        </a>
+
+        <a class="reporte-tile" href="/reportes/GHSA-6524-w46v-6399/">
+          <span class="tile-tipo">DoS</span>
+          <div class="tile-id">GHSA-6524-w46v-6399 · CVE pending</div>
+          <div class="tile-prod">pdfcpu/pdfcpu</div>
+          <div class="tile-desc">Index-out-of-range panics in PDF image renderers (<code>bpc</code> 9..16, short Indexed lookup).</div>
+          <div class="tile-sev sev-medium">CVSS 6.5 MEDIUM</div>
+          <span class="tile-more">Read more →</span>
+        </a>
+      </div>
+    </article>
+  </main>
+
+  {% include footer.html %}
+</body>
+</html>

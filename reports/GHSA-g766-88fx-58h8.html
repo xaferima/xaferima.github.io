@@ -1,0 +1,88 @@
+---
+layout: reporte
+title: "GHSA-g766-88fx-58h8 — Integer overflow in image buffer allocation (pdfcpu)"
+description: "Unchecked w*h*N int multiplications in pdfcpu image buffer allocation can overflow on 32-bit platforms (defense-in-depth). CVSS 5.9 MEDIUM. Fixed in v0.16.0."
+permalink: /reportes/GHSA-g766-88fx-58h8/
+---
+
+<h1>Integer overflow in image buffer allocation</h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">Overflow</span>
+  <span class="badge badge-sev-medium">CVSS 5.9 MEDIUM</span>
+  <span class="badge badge-cwe">CWE-190: Integer Overflow or Wraparound</span>
+  <span class="badge badge-id">pdfcpu/pdfcpu ≤ v0.15.0</span>
+</div>
+
+<p>
+  <a href="https://github.com/pdfcpu/pdfcpu/security/advisories/GHSA-g766-88fx-58h8">GHSA-g766-88fx-58h8</a> · CVE assignment pending
+</p>
+
+<h2>Summary</h2>
+
+<p>Eight image-buffer allocation paths in <code>pkg/pdfcpu/model/image.go</code> compute buffer sizes with unchecked <code>int</code> multiplication (<code>w*h*N</code>). On platforms with a 32-bit <code>int</code>, sufficiently large dimensions overflow, allocating a smaller-than-expected buffer. Today the upstream <code>MaxImagePixels</code> validation (computed in <code>int64</code> with <code>safemath</code>) keeps dimensions low enough that the overflow is not reachable — but this is a defense-in-depth gap. If any image decoder ever produced output dimensions larger than those declared in the header (a pattern seen in multiple image-library CVEs), the undersized buffer would be written out of bounds, causing heap corruption.</p>
+
+<h2>Impact</h2>
+
+<ul>
+  <li><strong>64-bit platforms:</strong> not directly exploitable with current limits (overflow impossible under <code>MaxImagePixels</code>), but hardening is valid.</li>
+  <li><strong>32-bit platforms:</strong> potentially exploitable → heap out-of-bounds write if a decoder dimension-mismatch bug exists.</li>
+  <li><strong>Severity:</strong> MEDIUM 5.9 — integrity impact low (heap corruption potential), availability high (process-killing panic).</li>
+</ul>
+
+<h2>Root Cause</h2>
+
+<p>Six primary functions (plus two variants) allocate pixel buffers with plain <code>int</code> multiplication:</p>
+
+<pre><code class="language-go">// pkg/pdfcpu/model/image.go
+buf := make([]byte, w*h*3)    // writeRGBAImageBuf, writeNRGBAImageBuf
+buf := make([]byte, w*h*6)    // writeRGBA64ImageBuf
+buf := make([]byte, w*h)      // writeGrayImageBuf
+buf := make([]byte, 2*w*h)    // writeGray16ImageBuf
+buf := make([]byte, w*h*4)    // writeCMYKImageBuf
+</code></pre>
+
+<p>Meanwhile <code>validateImageResourceLimits</code> correctly uses <code>safemath.MultiplyInt64</code> and <code>MaxImagePixels = 100M</code> — so the validation is safe but the allocation paths that trust it are not, if their inputs ever come from a source other than the validated header.</p>
+
+<h2>Proof of Concept</h2>
+
+<p>Unit-test confirmation of the overflow arithmetic (32-bit simulation):</p>
+
+<pre><code class="language-text">TestImageBufferOverflowDirect/overflow_rgba_32bit
+  w=26768, h=26768, multiplier=3
+  64-bit result: 2149577472
+  32-bit result: -2145389824 (truncated)
+  → smaller buffer allocation on 32-bit systems
+</code></pre>
+
+<p>Under current <code>MaxImagePixels</code> limits a square image is capped at ~10,000×10,000 pixels, keeping <code>w*h*3</code> within 32-bit range — the fix is hardening against a future regression or decoder mismatch, matching the class of bugs seen in CVE-2026-46601 (WebP dimension mismatch) and CVE-2026-46602 (TIFF unbounded tiles).</p>
+
+<h2>Disclosure Timeline</h2>
+
+<table>
+  <thead><tr><th>Date</th><th>Event</th></tr></thead>
+  <tbody>
+    <tr><td>2026-09-24</td><td>Report submitted via GitHub Private Vulnerability Reporting</td></tr>
+    <tr><td>2026-09-24</td><td>Accepted by maintainer (hhrutter)</td></tr>
+    <tr><td>2026-09-28</td><td>Advisory published — GHSA-g766-88fx-58h8</td></tr>
+    <tr><td>Fixed in</td><td>pdfcpu v0.16.0</td></tr>
+  </tbody>
+</table>
+
+<h2>Fix</h2>
+
+<p>Use <code>safemath.MultiplyInt</code> for every buffer-size computation:</p>
+
+<pre><code class="language-go">// After (safe):
+size, err := safemath.MultiplyInt(w, h)
+if err != nil {
+    return nil, fmt.Errorf("image buffer size overflow: %w", err)
+}
+size, err = safemath.MultiplyInt(size, 3)
+if err != nil {
+    return nil, fmt.Errorf("image buffer size overflow: %w", err)
+}
+buf := make([]byte, size)
+</code></pre>
+
+<p><em>Fixed in pdfcpu v0.16.0. Advisory published 2026-09-28; CVE assignment pending.</em></p>

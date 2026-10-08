@@ -1,0 +1,193 @@
+.reporte-container {
+  max-width: 900px;
+  margin: 1rem auto;
+  padding: 0 1rem;
+}
+
+.reporte-card {
+  padding: 2rem 2.5rem;
+  line-height: 1.65;
+}
+
+.reporte-card h1 {
+  font-family: 'Oswald', sans-serif;
+  color: #ff073a;
+  font-size: 1.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.reporte-card .meta-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0 1.5rem;
+}
+
+.reporte-card .badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'Fira Code', monospace;
+}
+
+.badge-tipo { background: #ff073a; color: #fff; }
+.badge-sev-high { background: rgba(255,122,26,0.2); color: #ff7a1a; border: 1px solid rgba(255,122,26,0.5); }
+.badge-sev-critical { background: rgba(255,7,58,0.2); color: #ff073a; border: 1px solid rgba(255,7,58,0.5); }
+.badge-sev-medium { background: rgba(255,205,66,0.15); color: #ffcd42; border: 1px solid rgba(255,205,66,0.4); }
+.badge-cwe { background: rgba(255,255,255,0.08); color: #ccc; border: 1px solid rgba(255,255,255,0.15); }
+.badge-id { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.2); font-family: 'Fira Code', monospace; }
+
+.reporte-card h2 {
+  font-family: 'Oswald', sans-serif;
+  color: #ff073a;
+  font-size: 1.35rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255,7,58,0.25);
+  padding-bottom: 0.35rem;
+}
+
+.reporte-card h3 {
+  font-family: 'Oswald', sans-serif;
+  color: #ff5c73;
+  font-size: 1.1rem;
+  margin-top: 1.25rem;
+}
+
+.reporte-card a { color: #ff5c73; }
+.reporte-card a:hover { color: #ff073a; }
+
+.reporte-card code {
+  font-family: 'Fira Code', monospace;
+  background: rgba(255,255,255,0.08);
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.88em;
+}
+
+.reporte-card pre {
+  background: rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,7,58,0.2);
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  line-height: 1.5;
+}
+
+.reporte-card pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.82rem;
+  color: #e0e0e0;
+}
+
+.reporte-card table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.92rem;
+}
+
+.reporte-card th {
+  text-align: left;
+  color: #ff073a;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(255,7,58,0.4);
+}
+
+.reporte-card td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.reporte-card blockquote {
+  border-left: 3px solid #ff073a;
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  background: rgba(255,7,58,0.06);
+  border-radius: 0 0.35rem 0.35rem 0;
+}
+
+.reporte-card ul, .reporte-card ol {
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.reporte-card li { margin: 0.35rem 0; }
+
+/* Index grid */
+.reportes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.reporte-tile {
+  display: block;
+  background: linear-gradient(145deg, rgba(115,115,115,0.15), rgb(43,45,47));
+  border: 1px solid rgba(255,7,58,0.15);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  text-decoration: none !important;
+  color: inherit;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.reporte-tile:hover {
+  border-color: rgba(255,7,58,0.6);
+  transform: translateY(-3px);
+  color: inherit;
+}
+
+.reporte-tile .tile-tipo {
+  display: inline-block;
+  background: #ff073a;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: 'Fira Code', monospace;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.reporte-tile .tile-id {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.82rem;
+  color: #ff5c73;
+  word-break: break-all;
+}
+
+.reporte-tile .tile-prod {
+  font-weight: 600;
+  margin: 0.4rem 0 0.25rem;
+  color: #fff;
+}
+
+.reporte-tile .tile-desc {
+  font-size: 0.88rem;
+  opacity: 0.75;
+  margin-bottom: 0.75rem;
+}
+
+.reporte-tile .tile-sev {
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'Fira Code', monospace;
+}
+
+.reporte-tile .tile-more {
+  display: block;
+  margin-top: 0.75rem;
+  color: #ff073a;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.sev-critical { color: #ff073a; }
+.sev-high { color: #ff7a1a; }
+.sev-medium { color: #ffcd42; }
