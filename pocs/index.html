@@ -10,8 +10,8 @@ permalink: /pocs/
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>PoC — CVE-2026-105080 · {{ site.title }}</title>
-  <meta name="description" content="Live proof-of-concept demo: RCE via calibre .recipe in ConvertX (CVE-2026-105080, CVSS 9.9).">
+  <title>PoC Demos · {{ site.title }}</title>
+  <meta name="description" content="Live proof-of-concept demos of coordinated vulnerability disclosures — CVE-2026-105080 RCE and more.">
 
   <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/favicon/apple-touch-icon.png" | prepend: site.baseurl }}">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ "/assets/favicon/favicon-32x32.png" | prepend: site.baseurl }}">
@@ -47,20 +47,49 @@ permalink: /pocs/
 
   <main class="reporte-container">
     <article class="card neumorphism-card-big reporte-card">
-      <h1>PoC — CVE-2026-105080</h1>
+      <h1>Proof-of-Concept Demos</h1>
+
+      <p>
+        Live exploit walkthroughs of coordinated vulnerability disclosures. Every issue was
+        reported privately to the maintainer and fixed before publication.
+      </p>
+
+      <h2>PoC — CVE-2026-105080: RCE via calibre .recipe</h2>
 
       <div class="meta-badges">
         <span class="badge badge-tipo">RCE</span>
         <span class="badge badge-sev-critical">CVSS 9.9</span>
         <span class="badge badge-cwe">CWE-94: Code Injection</span>
-        <span class="badge badge-id">ConvertX ≤ v0.18.0</span>
+        <span class="badge badge-id">ConvertX ≤ v0.18.0 · Fixed v0.19.0</span>
       </div>
 
       <p>
-        Live proof-of-concept: upload of a malicious calibre <code>.recipe</code> file to a vulnerable
-        ConvertX instance (v0.18.0, official Docker Compose) → <code>python exec</code> via
-        <code>ebook-convert</code> → root shell and <code>JWT_SECRET</code> exfiltration from the
-        process environment. Fixed in v0.19.0.
+        Registration, upload of a malicious calibre <code>.recipe</code> file, conversion trigger
+        via <code>ebook-convert</code>, root shell inside the container, and <code>JWT_SECRET</code>
+        exfiltration from the process environment.
+      </p>
+
+      <video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
+        <source src="/pocs/DemoRCE-CVE-2026-105080.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+        <a href="/pocs/DemoRCE-CVE-2026-105080.mp4" style="color:#ff5c73;">Download the video</a>
+      </video>
+
+      <p style="margin-top:1rem;font-size:0.85rem;opacity:0.7;">
+        Environment: the project's default Docker Compose deployment (v0.18.0). The leaked
+        <code>JWT_SECRET</code> is the hardcoded example value from <code>compose.yaml</code> —
+        part of the reported vulnerability.
+      </p>
+
+      <p style="margin-top:0.5rem;">
+        Full technical analysis → <a href="/reportes/CVE-2026-105080/">CVE-2026-105080 writeup</a>
+      </p>
+
+      <h2 style="margin-top:2.5rem;">Additional RCE PoC demo</h2>
+
+      <p>
+        Additional remote-code-execution proof-of-concept demo (container breakout / command
+        execution in a vulnerable conversion service).
       </p>
 
       <video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
@@ -68,16 +97,6 @@ permalink: /pocs/
         Your browser does not support the video tag.
         <a href="/pocs/PocRCE.mp4" style="color:#ff5c73;">Download the video</a>
       </video>
-
-      <p style="margin-top:1rem;font-size:0.85rem;opacity:0.7;">
-        Environment shown: the project's default Docker Compose deployment. The leaked
-        <code>JWT_SECRET</code> is the hardcoded example value from <code>compose.yaml</code> —
-        part of the reported vulnerability.
-      </p>
-
-      <p style="margin-top:1rem;">
-        Full technical analysis → <a href="/reportes/CVE-2026-105080/">CVE-2026-105080 writeup</a>
-      </p>
     </article>
   </main>
 
