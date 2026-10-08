@@ -1,0 +1,90 @@
+---
+layout: null
+permalink: /pocs/
+---
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>PoC — CVE-2026-105080 · {{ site.title }}</title>
+  <meta name="description" content="Live proof-of-concept demo: RCE via calibre .recipe in ConvertX (CVE-2026-105080, CVSS 9.9).">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/favicon/apple-touch-icon.png" | prepend: site.baseurl }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ "/assets/favicon/favicon-32x32.png" | prepend: site.baseurl }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ "/assets/favicon/favicon-16x16.png" | prepend: site.baseurl }}">
+  <link rel="manifest" href="{{ "/assets/favicon/site.webmanifest" | prepend: site.baseurl }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ "/assets/css/main.min.css" | prepend: site.baseurl }}">
+  <link rel="stylesheet" href="{{ "/assets/css/vendors.min.css" | prepend: site.baseurl }}">
+  <link rel="stylesheet" href="{{ "/assets/css/reportes.css" | prepend: site.baseurl }}">
+
+  <script src="{{ "/assets/js/vendors.min.js" | prepend: site.baseurl }}"></script>
+  <script>if(window.particlesJS)window.particlesJS.load=function(){};</script>
+  <script src="{{ "/assets/js/app.min.js" | prepend: site.baseurl }}"></script>
+</head>
+
+<body>
+  <div id="preloader">
+    <div class="load">
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+    </div>
+  </div>
+  <div style="display:flex;justify-content:space-between;padding:0.5rem 1rem;">
+    <a href="/reportes" style="color:#ff073a;">← Reports</a>
+    <span style="font-weight:bold;"><a href="/" style="color:#ff073a;text-decoration:none;">xaferima.com</a></span>
+    <a href="/reportes/CVE-2026-105080/" style="color:#ff073a;">Writeup →</a>
+  </div>
+
+  <main class="reporte-container">
+    <article class="card neumorphism-card-big reporte-card">
+      <h1>PoC — CVE-2026-105080</h1>
+
+      <div class="meta-badges">
+        <span class="badge badge-tipo">RCE</span>
+        <span class="badge badge-sev-critical">CVSS 9.9</span>
+        <span class="badge badge-cwe">CWE-94: Code Injection</span>
+        <span class="badge badge-id">ConvertX ≤ v0.18.0</span>
+      </div>
+
+      <p>
+        Live proof-of-concept: upload of a malicious calibre <code>.recipe</code> file to a vulnerable
+        ConvertX instance (v0.18.0, official Docker Compose) → <code>python exec</code> via
+        <code>ebook-convert</code> → root shell and <code>JWT_SECRET</code> exfiltration from the
+        process environment. Fixed in v0.19.0.
+      </p>
+
+      <video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
+        <source src="/pocs/PocRCE.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+        <a href="/pocs/PocRCE.mp4" style="color:#ff5c73;">Download the video</a>
+      </video>
+
+      <p style="margin-top:1rem;font-size:0.85rem;opacity:0.7;">
+        Environment shown: the project's default Docker Compose deployment. The leaked
+        <code>JWT_SECRET</code> is the hardcoded example value from <code>compose.yaml</code> —
+        part of the reported vulnerability.
+      </p>
+
+      <p style="margin-top:1rem;">
+        Full technical analysis → <a href="/reportes/CVE-2026-105080/">CVE-2026-105080 writeup</a>
+      </p>
+    </article>
+  </main>
+
+  <div style="text-align:center;padding:1rem;">
+    <a href="/reportes" style="color:#ff073a;">← Back to all reports</a>
+  </div>
+
+  {% include footer.html %}
+</body>
+</html>
