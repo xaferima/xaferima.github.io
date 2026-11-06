@@ -1,0 +1,110 @@
+---
+layout: reporte
+title: "GHSA-h2cv-65fq-jgrp — Command Injection via -o=shell -r in yq (mikefarah/yq)"
+description: "Command injection in yq ≤4.54.1 via the -o=shell and -r output flags — unsanitized user input passed to shell execution. CVSS 7.8 HIGH. Fixed in yq v4.54.2."
+permalink: /reportes/GHSA-h2cv-65fq-jgrp/
+---
+
+<link rel="alternate" hreflang="es" href="https://xaferima.com/reportes/GHSA-h2cv-65fq-jgrp-es/" />
+
+<h1>Command Injection in yq via <code>-o=shell -r</code></h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">Command Injection</span>
+  <span class="badge badge-sev-high">CVSS 7.8 HIGH</span>
+  <span class="badge badge-cwe">CWE-78: OS Command Injection</span>
+  <span class="badge badge-id">mikefarah/yq ≤ v4.54.1</span>
+</div>
+
+<p>
+  <a href="https://github.com/mikefarah/yq/security/advisories/GHSA-h2cv-65fq-jgrp">GHSA-h2cv-65fq-jgrp</a> · CVE assignment pending (MITRE CNA-LR)
+</p>
+
+<h2>Summary</h2>
+
+<p>The <code>-o=shell</code> output format in yq is designed to emit shell-escaped values that can be safely eval'd. However, when combined with the <code>-r</code> (raw output) flag, the shell escaping is bypassed and user-controlled input is passed directly to the shell without sanitization.</p>
+
+<p>Affected versions: all versions up to and including <strong>v4.54.1</strong>. The vulnerability exists in the <code>shellWriter</code> function which processes the <code>-o=shell</code> format.</p>
+
+<h2>Impact</h2>
+
+<ul>
+  <li><strong>Arbitrary command execution</strong> — an attacker who controls the input YAML/JSON (e.g., via a config file, CI/CD pipeline variable, or API response processed by yq) can execute arbitrary shell commands with the privileges of the yq process.</li>
+  <li><strong>Attack vector:</strong> local/remote — any context where yq processes untrusted input with <code>-o=shell -r</code> flags.</li>
+  <li>Real-world scenarios: CI/CD pipelines parsing attacker-controlled YAML, configuration management tools, Kubernetes manifest processing, API response transformation.</li>
+</ul>
+
+<h2>Root Cause</h2>
+
+<p>The <code>shellWriter</code> in <code>pkg/yqlib/shell_writer.go</code> applies shell escaping <em>unless</em> the <code>-r</code> flag is present. When <code>-r</code> is used, the raw string is written directly without escaping:</p>
+
+<pre><code class="language-go">// pkg/yqlib/shell_writer.go (simplified)
+func (w *shellWriter) writeString(s string) {
+    if w.rawOutput {
+        // RAW OUTPUT — NO ESCAPING
+        w.writer.WriteString(s)
+        return
+    }
+    // Normal path: shell escape the string
+    w.writer.WriteString(shellEscape(s))
+}
+</code></pre>
+
+<p>The documentation and flag interaction imply <code>-r</code> only removes quotes from output, but in practice it disables the shell escaping entirely for <code>-o=shell</code>.</p>
+
+<h2>Proof of Concept</h2>
+
+<p>Create a malicious YAML file:</p>
+
+<pre><code class="language-yaml"># evil.yaml
+payload: "$(id > /tmp/pwned)"
+</code></pre>
+
+<p>Process it with yq using the vulnerable flags:</p>
+
+<pre><code class="language-bash">yq -o=shell -r '.payload' evil.yaml
+# Output: $(id > /tmp/pwned)
+# When eval'd: executes 'id > /tmp/pwned'
+</code></pre>
+
+<p>If the output is used in a shell context (e.g., <code>eval $(yq -o=shell -r ...)</code> or sourced), the command executes immediately. Even without explicit eval, the output is intended to be shell-safe — the <code>-r</code> flag breaks that contract.</p>
+
+<h2>Disclosure Timeline</h2>
+
+<table>
+  <thead><tr><th>Date</th><th>Event</th></tr></thead>
+  <tbody>
+    <tr><td>2026-10-08</td><td>Vulnerability discovered during source code review</td></tr>
+    <tr><td>2026-10-08</td><td>Advisory submitted via GitHub Private Vulnerability Reporting</td></tr>
+    <tr><td>2026-10-23</td><td>Maintainer acknowledged — <strong>fixed in v4.54.2</strong></td></tr>
+    <tr><td>2026-10-23</td><td>GitHub Security Advisory published: GHSA-h2cv-65fq-jgrp</td></tr>
+    <tr><td>2026-10-24</td><td>Retest completed — fix verified; CVE request submitted to MITRE (CNA-LR)</td></tr>
+    <tr><td>Pending</td><td>CVE assignment via MITRE CNA-LR</td></tr>
+  </tbody>
+</table>
+
+<h2>Fix</h2>
+
+<ul>
+  <li>Shell escaping is now applied <strong>regardless of the <code>-r</code> flag</strong> when <code>-o=shell</code> is used — the <code>-r</code> flag only controls quoting, not escaping.</li>
+  <li>Updated documentation to clarify that <code>-o=shell</code> output is always shell-escaped.</li>
+</ul>
+
+<pre><code class="language-go">// pkg/yqlib/shell_writer.go — after fix
+func (w *shellWriter) writeString(s string) {
+    // Always escape for shell output format
+    escaped := shellEscape(s)
+    if w.rawOutput {
+        // rawOutput only controls quoting, not escaping
+        w.writer.WriteString(escaped)
+        return
+    }
+    w.writer.WriteString(escaped)
+}
+</code></pre>
+
+<p><em>Fixed in yq v4.54.2 (2026-10-23). Advisory published 2026-10-23; CVE assignment pending via MITRE CNA-LR.</em></p>
+
+<div style="text-align:center;padding:1rem;">
+  <a href="/reportes" style="color:#ff073a;">← Back to all reports</a>
+</div>

@@ -1,0 +1,108 @@
+---
+layout: reporte-es
+title: "GHSA-h2cv-65fq-jgrp — Inyección de comandos en yq mediante -o=shell -r (mikefarah/yq)"
+description: "Inyección de comandos en yq ≤4.54.1 a través de los flags de salida -o=shell y -r — entrada de usuario sin sanitizar pasada a ejecución de shell. CVSS 7.8 HIGH. Corregido en yq v4.54.2."
+permalink: /reportes/GHSA-h2cv-65fq-jgrp-es/
+---
+
+<h1>Inyección de comandos en yq mediante <code>-o=shell -r</code></h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">Inyección de Comandos</span>
+  <span class="badge badge-sev-high">CVSS 7.8 HIGH</span>
+  <span class="badge badge-cwe">CWE-78: OS Command Injection</span>
+  <span class="badge badge-id">mikefarah/yq ≤ v4.54.1</span>
+</div>
+
+<p>
+  <a href="https://github.com/mikefarah/yq/security/advisories/GHSA-h2cv-65fq-jgrp">GHSA-h2cv-65fq-jgrp</a> · Asignación CVE pendiente (MITRE CNA-LR)
+</p>
+
+<h2>Resumen</h2>
+
+<p>El formato de salida <code>-o=shell</code> en yq está diseñado para emitir valores con escape de shell que pueden evaluarse de forma segura. Sin embargo, cuando se combina con el flag <code>-r</code> (salida cruda), el escape de shell se omite y la entrada controlada por el usuario se pasa directamente al shell sin sanitización.</p>
+
+<p>Versiones afectadas: todas las versiones hasta e incluyendo <strong>v4.54.1</strong>. La vulnerabilidad existe en la función <code>shellWriter</code> que procesa el formato <code>-o=shell</code>.</p>
+
+<h2>Impacto</h2>
+
+<ul>
+  <li><strong>Ejecución arbitraria de comandos</strong> — un atacante que controle el YAML/JSON de entrada (p.ej., mediante un archivo de configuración, variable de CI/CD, o respuesta de API procesada por yq) puede ejecutar comandos de shell arbitrarios con los privilegios del proceso yq.</li>
+  <li><strong>Vector de ataque:</strong> local/remoto — cualquier contexto donde yq procese entrada no confiable con los flags <code>-o=shell -r</code>.</li>
+  <li>Escenarios reales: pipelines CI/CD parseando YAML controlado por atacante, herramientas de gestión de configuración, procesamiento de manifiestos Kubernetes, transformación de respuestas de API.</li>
+</ul>
+
+<h2>Causa Raíz</h2>
+
+<p>El <code>shellWriter</code> en <code>pkg/yqlib/shell_writer.go</code> aplica escape de shell <em>a menos que</em> esté presente el flag <code>-r</code>. Cuando se usa <code>-r</code>, la cadena cruda se escribe directamente sin escape:</p>
+
+<pre><code class="language-go">// pkg/yqlib/shell_writer.go (simplificado)
+func (w *shellWriter) writeString(s string) {
+    if w.rawOutput {
+        // SALIDA CRUDA — SIN ESCAPE
+        w.writer.WriteString(s)
+        return
+    }
+    // Ruta normal: escape de shell de la cadena
+    w.writer.WriteString(shellEscape(s))
+}
+</code></pre>
+
+<p>La documentación y la interacción de flags implican que <code>-r</code> solo elimina comillas de la salida, pero en la práctica deshabilita el escape de shell completamente para <code>-o=shell</code>.</p>
+
+<h2>Prueba de Concepto</h2>
+
+<p>Crear un archivo YAML malicioso:</p>
+
+<pre><code class="language-yaml"># evil.yaml
+payload: "$(id > /tmp/pwned)"
+</code></pre>
+
+<p>Procesarlo con yq usando los flags vulnerables:</p>
+
+<pre><code class="language-bash">yq -o=shell -r '.payload' evil.yaml
+# Salida: $(id > /tmp/pwned)
+# Al evaluarse: ejecuta 'id > /tmp/pwned'
+</code></pre>
+
+<p>Si la salida se usa en un contexto de shell (p.ej., <code>eval $(yq -o=shell -r ...)</code> o <code>source</code>), el comando se ejecuta inmediatamente. Incluso sin <code>eval</code> explícito, la salida está destinada a ser segura para shell — el flag <code>-r</code> rompe ese contrato.</p>
+
+<h2>Cronología de Divulgación</h2>
+
+<table>
+  <thead><tr><th>Fecha</th><th>Evento</th></tr></thead>
+  <tbody>
+    <tr><td>2026-10-08</td><td>Vulnerabilidad descubierta durante revisión de código fuente</td></tr>
+    <tr><td>2026-10-08</td><td>Advisory enviado vía GitHub Private Vulnerability Reporting</td></tr>
+    <tr><td>2026-10-23</td><td>Mantenedor confirmó — <strong>corregido en v4.54.2</strong></td></tr>
+    <tr><td>2026-10-23</td><td>GitHub Security Advisory publicado: GHSA-h2cv-65fq-jgrp</td></tr>
+    <tr><td>2026-10-24</td><td>Retest completado — fix verificado; solicitud CVE enviada a MITRE (CNA-LR)</td></tr>
+    <tr><td>Pendiente</td><td>Asignación CVE vía MITRE CNA-LR</td></tr>
+  </tbody>
+</table>
+
+<h2>Corrección</h2>
+
+<ul>
+  <li>El escape de shell ahora se aplica <strong>independientemente del flag <code>-r</code></strong> cuando se usa <code>-o=shell</code> — el flag <code>-r</code> solo controla el entrecomillado, no el escape.</li>
+  <li>Documentación actualizada para aclarar que la salida <code>-o=shell</code> siempre tiene escape de shell.</li>
+</ul>
+
+<pre><code class="language-go">// pkg/yqlib/shell_writer.go — tras la corrección
+func (w *shellWriter) writeString(s string) {
+    // Siempre escape para formato de salida shell
+    escaped := shellEscape(s)
+    if w.rawOutput {
+        // rawOutput solo controla entrecomillado, no escape
+        w.writer.WriteString(escaped)
+        return
+    }
+    w.writer.WriteString(escaped)
+}
+</code></pre>
+
+<p><em>Corregido en yq v4.54.2 (2026-10-23). Advisory publicado 2026-10-23; asignación CVE pendiente vía MITRE CNA-LR.</em></p>
+
+<div style="text-align:center;padding:1rem;">
+  <a href="/reportes" style="color:#ff073a;">← Volver a todos los reportes</a>
+</div>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://xaferima.com/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xaferima.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://xaferima.com/index-es.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xaferima.com/" />
+  </url>
+  <url>
+    <loc>https://xaferima.com/index-es.html</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xaferima.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://xaferima.com/index-es.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xaferima.com/" />
+  </url>
+  <url>
+    <loc>https://xaferima.com/reportes/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xaferima.com/reportes/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://xaferima.com/reportes/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xaferima.com/reportes/" />
+  </url>
+  <url>
+    <loc>https://xaferima.com/reportes/CVE-2026-105080/</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xaferima.com/reportes/CVE-2026-105080/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://xaferima.com/reportes/CVE-2026-105080-es/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xaferima.com/reportes/CVE-2026-105080/" />
+  </url>
+  <url>
+    <loc>https://xaferima.com/reportes/GHSA-h2cv-65fq-jgrp/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xaferima.com/reportes/GHSA-h2cv-65fq-jgrp/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://xaferima.com/reportes/GHSA-h2cv-65fq-jgrp-es/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xaferima.com/reportes/GHSA-h2cv-65fq-jgrp/" />
+  </url>
+  <url>
+    <loc>https://xaferima.com/reportes/GHSA-w2hj-54mc-76r4/</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xaferima.com/reportes/GHSA-w2hj-54mc-76r4/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://xaferima.com/reportes/GHSA-w2hj-54mc-76r4-es/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xaferima.com/reportes/GHSA-w2hj-54mc-76r4/" />
+  </url>
+  <url>
+    <loc>https://xaferima.com/reportes/GHSA-9c7h-xjrp-8gh3/</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xaferima.com/reportes/GHSA-9c7h-xjrp-8gh3/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://xaferima.com/reportes/GHSA-9c7h-xjrp-8gh3-es/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xaferima.com/reportes/GHSA-9c7h-xjrp-8gh3/" />
+  </url>
+  <url>
+    <loc>https://xaferima.com/reportes/GHSA-fjh6-rrhv-4g63/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xaferima.com/reportes/GHSA-fjh6-rrhv-4g63/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://xaferima.com/reportes/GHSA-fjh6-rrhv-4g63-es/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xaferima.com/reportes/GHSA-fjh6-rrhv-4g63/" />
+  </url>
+  <url>
+    <loc>https://xaferima.com/reportes/GHSA-6524-w46v-6399/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xaferima.com/reportes/GHSA-6524-w46v-6399/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://xaferima.com/reportes/GHSA-6524-w46v-6399-es/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xaferima.com/reportes/GHSA-6524-w46v-6399/" />
+  </url>
+  <url>
+    <loc>https://xaferima.com/reportes/GHSA-g766-88fx-58h8/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xaferima.com/reportes/GHSA-g766-88fx-58h8/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://xaferima.com/reportes/GHSA-g766-88fx-58h8-es/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xaferima.com/reportes/GHSA-g766-88fx-58h8/" />
+  </url>
+  <url>
+    <loc>https://xaferima.com/pocs/</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xaferima.com/pocs/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://xaferima.com/pocs/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xaferima.com/pocs/" />
+  </url>
+</urlset>

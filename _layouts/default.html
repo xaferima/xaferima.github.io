@@ -8,20 +8,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>{{ site.title }}</title>
-  <meta name="description" content="{{ site.description }}">
+  <meta name="description" content="{{ site.description }} | Ecuador-based security researcher specializing in fintech, mobile, API, cloud penetration testing and vulnerability research.">
+  <link rel="canonical" href="https://xaferima.com/" />
+  <link rel="alternate" hreflang="en" href="https://xaferima.com/" />
+  <link rel="alternate" hreflang="es" href="https://xaferima.com/index-es.html" />
+  <link rel="alternate" hreflang="x-default" href="https://xaferima.com/" />
+
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Xavier Riofrio — Offensive Security Expert">
-  <meta property="og:description" content="{{ site.description }}">
+  <meta property="og:title" content="Xavier Riofrio — Offensive Security Expert | DEF CON Speaker | CVE Author">
+  <meta property="og:description" content="{{ site.description }} | Ecuador-based security researcher. 10+ years breaking web, API, mobile & cloud. CVSS 9.9 CVE author.">
   <meta property="og:url" content="https://xaferima.com/">
   <meta property="og:image" content="https://xaferima.com/assets/img/og-image.png">
+  <meta property="og:site_name" content="xaferima.com">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="es_EC">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@xaferima">
+  <meta name="twitter:creator" content="@xaferima">
+  <meta name="twitter:title" content="Xavier Riofrio — Offensive Security Expert | DEF CON Speaker | CVE Author">
+  <meta name="twitter:description" content="{{ site.description }} | Ecuador-based security researcher. CVSS 9.9 CVE author.">
 
   <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/favicon/apple-touch-icon.png" | prepend: site.baseurl }}">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ "/assets/favicon/favicon-32x32.png" | prepend: site.baseurl }}">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ "/assets/favicon/favicon-16x16.png" | prepend: site.baseurl }}">
   <link rel="manifest" href="{{ "/assets/favicon/site.webmanifest" | prepend: site.baseurl }}">
 
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ "/assets/css/main.min.css" | prepend: site.baseurl }}">
   <link rel="stylesheet" href="{{ "/assets/css/vendors.min.css" | prepend: site.baseurl }}">
 
@@ -30,6 +45,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <style>.landing-title h1{line-height:1.1!important}</style>
   <script>if('/'===location.pathname&&location.search.indexOf('normal')===-1&&Math.random()<.75)location.href='/xmen97'</script>
+
+  <!-- JSON-LD: Person -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -37,14 +54,87 @@
     "name": "Xavier Riofrio",
     "url": "https://xaferima.com",
     "jobTitle": "Offensive Security Expert",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Independent Security Researcher"
+    },
+    "knowsAbout": [
+      "Penetration Testing",
+      "Mobile Application Security",
+      "API Security",
+      "Cloud Security",
+      "Vulnerability Research",
+      "Red Teaming",
+      "KYC Security",
+      "Biometric Security",
+      "AI Security"
+    ],
     "sameAs": [
       "https://www.linkedin.com/in/xaferima",
       "https://github.com/xaferima",
       "https://medium.com/@xaferima",
       "https://twitter.com/xaferima"
-    ]
+    ],
+    "alumniOf": {
+      "@type": "EducationalOrganization",
+      "name": "University of Birmingham"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Cuenca",
+      "addressCountry": "EC"
+    }
   }
   </script>
+
+  <!-- JSON-LD: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://xaferima.com/"
+    }]
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage (key questions) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "What is Xavier Riofrio's highest severity CVE?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "CVE-2026-105080 with CVSS 9.9 CRITICAL — RCE via calibre .recipe in ConvertX, allowing remote code execution as root and JWT_SECRET exfiltration."
+      }
+    },{
+      "@type": "Question",
+      "name": "How many GitHub Security Advisories has Xavier Riofrio published?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "6 GitHub Security Advisories across ConvertX, pdfcpu, SnapOtter, and yq — covering RCE, command injection, integer overflows, resource exhaustion, renderer panics, and SVG sanitization bypass."
+      }
+    },{
+      "@type": "Question",
+      "name": "Where is Xavier Riofrio based?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cuenca, Ecuador. Available for remote security consulting, research collaborations, and conference speaking worldwide."
+      }
+    }]
+  }
+  </script>
+
+  <!-- Google Search Console verification (placeholder) -->
+  <meta name="google-site-verification" content="GSC_VERIFICATION_CODE_PLACEHOLDER" />
+  <!-- Bing Webmaster Tools verification (placeholder) -->
+  <meta name="msvalidate.01" content="BING_VERIFICATION_CODE_PLACEHOLDER" />
 </head>
  
 <body>

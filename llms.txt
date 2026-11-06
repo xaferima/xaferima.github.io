@@ -1,0 +1,77 @@
+# Xavier Riofrio (xaferima) — Offensive Security Expert
+> Personal website of Xavier Fernando Riofrío Machado — Offensive Security & AppSec Researcher, Ex-CERN, CVE Author (CVSS 9.9), International Speaker (DEF CON+), Mobile/Web/Cloud/API Security.
+
+## About
+- **Name:** Xavier Fernando Riofrío Machado
+- **Handle:** xaferima
+- **Role:** Offensive Security Expert & AppSec Researcher
+- **Location:** Cuenca, Ecuador
+- **Email:** xaferima@gmail.com
+- **LinkedIn:** https://linkedin.com/in/xaferima
+- **GitHub:** https://github.com/xaferima
+- **Website:** https://xaferima.com
+- **Speaking:** DEF CON 34, BSides Colombia, PWN OR DIE (2025, 2026)
+
+## Certifications
+- CEH Master (EC-Council)
+- eJPT (INE)
+- CAPIPEN (SecOps Group)
+- CRTeamer (SecOps Group) — Red Teaming
+- CMPen-Android (SecOps Group) — Mobile Pentesting
+
+## Education
+- MSc Cyber Security with Distinction — University of Birmingham
+- Former Security Engineer (Penetration Testing) — CERN
+
+## Key Research & CVEs (6 GitHub Security Advisories)
+1. **CVE-2026-105080** — ConvertX v0.18.0 — RCE via calibre .recipe (Python exec as root) — **CVSS 9.9 CRITICAL** — CWE-94 — Fixed v0.19.0
+2. **GHSA-h2cv-65fq-jgrp** — yq ≤4.54.1 — Command injection via `-o=shell -r` — **CVSS 7.8 HIGH** — CWE-78 — Fixed v4.54.2
+3. **GHSA-w2hj-54mc-76r4** — pdfcpu v0.15.0 — Integer overflow in XRef /W array → DoS — **CVSS 7.5 HIGH** — CWE-190 — Fixed v0.16.0
+4. **GHSA-9c7h-xjrp-8gh3** — SnapOtter ≤2.2.0 — Stored XXE/SSRF/XSS via SVG upload sanitization bypass — **CVSS 7.1 HIGH** — CWE-79 — Fixed v2.3.0
+5. **GHSA-fjh6-rrhv-4g63** — pdfcpu v0.15.0 — Traditional XRef tables bypass limits → DoS — **CVSS 6.5 MEDIUM** — CWE-770 — Fixed v0.16.0
+6. **GHSA-6524-w46v-6399** — pdfcpu v0.15.0 — Index-out-of-range panics in PDF renderers — **CVSS 6.5 MEDIUM** — CWE-129 — Fixed v0.16.1
+7. **GHSA-g766-88fx-58h8** — pdfcpu v0.15.0 — Integer overflow in image buffer allocation — **CVSS 5.9 MEDIUM** — CWE-190 — Fixed v0.16.0
+
+## Specializations
+- Mobile Application Security (iOS/Android) — OWASP MASTG, MobSF, Frida, Objection, JADX
+- API Security Testing — OWASP API Top 10, GraphQL, REST, gRPC
+- Cloud Security — AWS, Kubernetes, CI/CD pipeline security
+- KYC / Biometric Security — Liveness bypass, deepfake detection, face recognition assessment
+- AI-Augmented Security — OWASP LLM Top 10, prompt injection, LLM-assisted vuln discovery (Strix, Ollama)
+- Red Teaming — External attack surface, initial access, privilege escalation
+
+## Technical Writeups (Security Reports)
+- https://xaferima.com/reportes/CVE-2026-105080/ — ConvertX RCE
+- https://xaferima.com/reportes/GHSA-h2cv-65fq-jgrp/ — yq Command Injection
+- https://xaferima.com/reportes/GHSA-w2hj-54mc-76r4/ — pdfcpu Integer Overflow
+- https://xaferima.com/reportes/GHSA-9c7h-xjrp-8gh3/ — SnapOtter SVG Sanitization Bypass
+- https://xaferima.com/reportes/GHSA-fjh6-rrhv-4g63/ — pdfcpu Resource Exhaustion
+- https://xaferima.com/reportes/GHSA-6524-w46v-6399/ — pdfcpu Renderer Panics
+- https://xaferima.com/reportes/GHSA-g766-88fx-58h8/ — pdfcpu Buffer Overflow
+
+## Proof-of-Concept Demos
+- https://xaferima.com/pocs/ — Video demonstrations of exploits
+
+## Speaking & Publications
+- DEF CON 34 (2026) — "Your APP Thinks I'm You: A Complete Kill Chain Against Mobile App Security"
+- BSides Colombia (2026) — "Your Brain > Your Toolkit: Real Bugs, Zero Code, Zero Tools"
+- PWN OR DIE (2026) — "Frustration Kill Chain: un framework para depurar rechazo en seguridad ofensiva"
+- PWN OR DIE (2025) — "When Your Mind Becomes the Exploit: No Code, No Tools"
+
+## Services
+- Penetration Testing (Web, API, Mobile, Cloud)
+- Red Team Engagements
+- Vulnerability Research & Disclosure
+- Security Architecture Review
+- AI/ML Model Security Assessment
+- KYC/Biometric Security Evaluation
+- Security Training & Workshops
+
+## Languages
+- Spanish (Native)
+- English (Professional)
+
+## Contact
+- Email: xaferima@gmail.com
+- LinkedIn: https://linkedin.com/in/xaferima
+- Available for: Research collaborations, conference speaking, security consulting
