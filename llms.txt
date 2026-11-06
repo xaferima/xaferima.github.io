@@ -41,13 +41,13 @@
 - Red Teaming — External attack surface, initial access, privilege escalation
 
 ## Technical Writeups (Security Reports)
-- https://xaferima.com/reportes/CVE-2026-105080/ — ConvertX RCE
-- https://xaferima.com/reportes/GHSA-h2cv-65fq-jgrp/ — yq Command Injection
-- https://xaferima.com/reportes/GHSA-w2hj-54mc-76r4/ — pdfcpu Integer Overflow
-- https://xaferima.com/reportes/GHSA-9c7h-xjrp-8gh3/ — SnapOtter SVG Sanitization Bypass
-- https://xaferima.com/reportes/GHSA-fjh6-rrhv-4g63/ — pdfcpu Resource Exhaustion
-- https://xaferima.com/reportes/GHSA-6524-w46v-6399/ — pdfcpu Renderer Panics
-- https://xaferima.com/reportes/GHSA-g766-88fx-58h8/ — pdfcpu Buffer Overflow
+- https://xaferima.com/reports/CVE-2026-105080/ — ConvertX RCE
+- https://xaferima.com/reports/GHSA-h2cv-65fq-jgrp/ — yq Command Injection
+- https://xaferima.com/reports/GHSA-w2hj-54mc-76r4/ — pdfcpu Integer Overflow
+- https://xaferima.com/reports/GHSA-9c7h-xjrp-8gh3/ — SnapOtter SVG Sanitization Bypass
+- https://xaferima.com/reports/GHSA-fjh6-rrhv-4g63/ — pdfcpu Resource Exhaustion
+- https://xaferima.com/reports/GHSA-6524-w46v-6399/ — pdfcpu Renderer Panics
+- https://xaferima.com/reports/GHSA-g766-88fx-58h8/ — pdfcpu Buffer Overflow
 
 ## Proof-of-Concept Demos
 - https://xaferima.com/pocs/ — Video demonstrations of exploits
