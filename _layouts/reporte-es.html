@@ -104,3 +104,32 @@
   <!-- Bing Webmaster Tools verification (placeholder) -->
   <meta name="msvalidate.01" content="BING_VERIFICATION_CODE_PLACEHOLDER" />
 </head>
+
+<body>
+  <div id="preloader">
+    <div class="load">
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+    </div>
+  </div>
+  <div style="display:flex;justify-content:space-between;padding:0.5rem 1rem;">
+    <a href="/reportes" style="color:#ff073a;">← Reportes</a>
+    <span style="font-weight:bold;"><a href="/" style="color:#ff073a;text-decoration:none;">xaferima.com</a></span>
+    <a href="{{ page.permalink_en }}" style="color:#ff073a;">English →</a>
+  </div>
+
+  <main class="reporte-container">
+    <article class="card neumorphism-card-big reporte-card">
+      {{ content }}
+    </article>
+  </main>
+
+  <div style="text-align:center;padding:1rem;">
+    <a href="/reportes" style="color:#ff073a;">← Volver a todos los reportes</a>
+  </div>
+
+  {% include footer.html %}
+</body>
+</html>
