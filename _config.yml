@@ -118,9 +118,9 @@ cves_title: CVEs
 # cves_title_es: The will be displayed as the title in the CVEs section (Spanish)
 cves_title_es: Vulnerabilidades
 # cves_description: This will be displayed under the title.
-cves_description: "Coordinated vulnerability disclosures across ConvertX and pdfcpu — discovered, exploited, and coordinated disclosure with the maintainers."
+cves_description: "Coordinated vulnerability disclosures across ConvertX, pdfcpu, and SnapOtter — discovered, exploited, and coordinated disclosure with the maintainers."
 # cves_description_es: This will be displayed under the title (Spanish).
-cves_description_es: "Divulgaciones coordinadas de vulnerabilidades en ConvertX y pdfcpu — descubiertas, explotadas y divulgadas coordinadamente con los mantenedores."
+cves_description_es: "Divulgaciones coordinadas de vulnerabilidades en ConvertX, pdfcpu y SnapOtter — descubiertas, explotadas y divulgadas coordinadamente con los mantenedores."
 
 
 # CONTACT SECTION
