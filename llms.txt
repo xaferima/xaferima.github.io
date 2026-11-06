@@ -51,6 +51,10 @@
 
 ## Proof-of-Concept Demos
 - https://xaferima.com/pocs/ — Video demonstrations of exploits
+- https://xaferima.com/pocs/DemoRCE-CVE-2026-105080.mp4 — ConvertX RCE (CVE-2026-105080)
+- https://xaferima.com/pocs/PoC-yq-GHSA-h2cv-65fq-jgrp.mp4 — yq Command Injection (GHSA-h2cv-65fq-jgrp)
+- https://xaferima.com/pocs/PoC-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4 — SnapOtter Full Exploit (GHSA-9c7h-xjrp-8gh3)
+- https://xaferima.com/pocs/XSS-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4 — SnapOtter Minimal XSS (GHSA-9c7h-xjrp-8gh3)
 
 ## Speaking & Publications
 - DEF CON 34 (2026) — "Your APP Thinks I'm You: A Complete Kill Chain Against Mobile App Security"

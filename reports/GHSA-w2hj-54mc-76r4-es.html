@@ -1,0 +1,97 @@
+---
+layout: reporte-es
+title: "GHSA-w2hj-54mc-76r4 — Desbordamiento de entero en array /W de stream XRef (pdfcpu)"
+description: "Desbordamiento de entero en la suma del array /W del stream XRef causa un panic sin recuperar (DoS) en pdfcpu. CVSS 7.5 HIGH. Corregido en v0.16.0."
+permalink: /reportes/GHSA-w2hj-54mc-76r4-es/
+permalink_en: /reportes/GHSA-w2hj-54mc-76r4/
+---
+
+<h1>Desbordamiento de entero en array /W de stream XRef</h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">DoS</span>
+  <span class="badge badge-sev-high">CVSS 7.5 HIGH</span>
+  <span class="badge badge-cwe">CWE-190: Integer Overflow or Wraparound</span>
+  <span class="badge badge-id">pdfcpu/pdfcpu < v0.16.0</span>
+</div>
+
+<p>
+  <a href="https://github.com/pdfcpu/pdfcpu/security/advisories/GHSA-w2hj-54mc-76r4">GHSA-w2hj-54mc-76r4</a> &middot; Asignación de CVE pendiente
+</p>
+
+<h2>Resumen</h2>
+
+<p>Un desbordamiento de entero en el c&aacute;lculo de la suma del array <code>/W</code> del stream de referencia cruzada permite a cualquier atacante sin autenticar crashear cualquier aplicaci&oacute;n que use pdfcpu proporcionando un PDF creado a medida. El desbordamiento produce una longitud de entrada peque&ntilde;a y positiva que pasa la comprobaci&oacute;n de integridad m&oacute;dulo, tras lo cual lecturas de slices fuera de rango disparan un <code>panic: runtime error: slice bounds out of range</code> sin recuperar. El panic escapa a la API p&uacute;blica y mata el proceso anfitri&oacute;n.</p>
+
+<h2>Impacto</h2>
+
+<ul>
+  <li><strong>Denegaci&oacute;n de Servicio</strong> &mdash; panic de runtime sin recuperar termina el proceso.</li>
+  <li><strong>Vector de ataque:</strong> red &mdash; PDF malicioso v&iacute;a subida, adjunto de email, o cualquier pipeline de procesamiento.</li>
+  <li><strong>Sin autenticaci&oacute;n requerida</strong>; interacci&oacute;n de usuario limitada a que la v&iacute;ctima procese el archivo.</li>
+  <li><strong>&Aacute;mbito:</strong> cualquier aplicaci&oacute;n que embeba pdfcpu (CLI, servicios HTTP, librer&iacute;as) y proyectos Go descendientes.</li>
+</ul>
+
+<h2>Causa Ra&iacute;z</h2>
+
+<p>En <code>pkg/pdfcpu/read.go</code>, <code>extractXRefTableEntriesFromXRefStream()</code> calcula la longitud de entrada de referencia cruzada sumando tres valores controlados por el atacante del array <code>/W</code> sin comprobaci&oacute;n de desbordamiento:</p>
+
+<pre><code class="language-go">// pkg/pdfcpu/read.go:710
+i1 := xsd.W[0]
+i2 := xsd.W[1]
+i3 := xsd.W[2]
+xrefEntryLen := i1 + i2 + i3  // ← sin comprobación de desbordamiento
+</code></pre>
+
+<p>Los valores solo se validan para no-negatividad en el parseo (<code>pkg/pdfcpu/model/parse.go</code>). Cuando la suma desborda <code>int64</code> a un valor positivo peque&ntilde;o (p.ej. <code>1</code>), la validaci&oacute;n m&oacute;dulo pasa pero los valores <code>W</code> individuales permanecen enormes, por lo que las operaciones de slice posteriores leen mucho m&aacute;s all&aacute; del buffer:</p>
+
+<pre><code class="language-go">// read.go:763-766 — bufToInt64(buf[i : i+i1]) con i1 ≈ 6.1e18
+</code></pre>
+
+<h2>Prueba de Concepto</h2>
+
+<p>Crear un stream XRef cuyos valores <code>/W</code> desbordan al sumarse:</p>
+
+<pre><code class="language-text">W = [6148914691236517205, 6148914691236517205, 6148914691236517207]
+suma matemática: 18446744073709551617
+desbordamiento int64:   1  → pasa comprobación módulo
+slices reales:    buf[i : i+6148914691236517205] → PANIC
+</code></pre>
+
+<p>Confirmado con una prueba unitaria contra la funci&oacute;n vulnerable:</p>
+
+<pre><code class="language-text">=== RUN   TestXRefWArrayOverflow/overflow_to_one
+    PANIC: runtime error: slice bounds out of range
+           [:6148914691236517205] with capacity 3
+</code></pre>
+
+<p>Un PDF m&iacute;nimo que incrusta tal stream XRef crashea <code>pdfcpu validate</code>, <code>pdfcpu merge</code>, y cualquier llamada <code>api.ReadContext()</code> sobre el archivo.</p>
+
+<h2>Cronolog&iacute;a de Divulgaci&oacute;n</h2>
+
+<table>
+  <thead><tr><th>Fecha</th><th>Evento</th></tr></thead>
+  <tbody>
+    <tr><td>2026-09-13</td><td>Informe enviado v&iacute;a GitHub Private Vulnerability Reporting</td></tr>
+    <tr><td>2026-09-14</td><td>Aceptado por el mantenedor (hhrutter)</td></tr>
+    <tr><td>2026-09-28</td><td>Aviso publicado — GHSA-w2hj-54mc-76r4</td></tr>
+    <tr><td>Corregido en</td><td>pdfcpu v0.16.0</td></tr>
+  </tbody>
+</table>
+
+<h2>Correcci&oacute;n</h2>
+
+<p>Usar <code>safemath.AddInt</code> existente del c&oacute;digo para la suma del array <code>W</code> y rechazar desbordamientos:</p>
+
+<pre><code class="language-go">// Después (seguro):
+xrefEntryLen, err := safemath.AddInt(i1, i2)
+if err != nil {
+    return errInvalidXRefStreamWArray
+}
+xrefEntryLen, err = safemath.AddInt(xrefEntryLen, i3)
+if err != nil {
+    return errInvalidXRefStreamWArray
+}
+</code></pre>
+
+<p><em>Corregido en pdfcpu v0.16.0. Aviso publicado 2026-09-28; asignación de CVE pendiente.</em></p>

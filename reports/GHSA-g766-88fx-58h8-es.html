@@ -1,0 +1,89 @@
+---
+layout: reporte-es
+title: "GHSA-g766-88fx-58h8 — Desbordamiento de entero en asignación de buffer de imagen (pdfcpu)"
+description: "Multiplicaciones int w*h*N sin comprobar en asignación de buffer de imagen de pdfcpu pueden desbordar en plataformas 32-bit (defensa en profundidad). CVSS 5.9 MEDIUM. Corregido en v0.16.0."
+permalink: /reportes/GHSA-g766-88fx-58h8-es/
+permalink_en: /reportes/GHSA-g766-88fx-58h8/
+---
+
+<h1>Desbordamiento de entero en asignación de buffer de imagen</h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">Overflow</span>
+  <span class="badge badge-sev-medium">CVSS 5.9 MEDIUM</span>
+  <span class="badge badge-cwe">CWE-190: Integer Overflow or Wraparound</span>
+  <span class="badge badge-id">pdfcpu/pdfcpu &le; v0.15.0</span>
+</div>
+
+<p>
+  <a href="https://github.com/pdfcpu/pdfcpu/security/advisories/GHSA-g766-88fx-58h8">GHSA-g766-88fx-58h8</a> &middot; Asignación de CVE pendiente
+</p>
+
+<h2>Resumen</h2>
+
+<p>Ocho rutas de asignación de buffer de imagen en <code>pkg/pdfcpu/model/image.go</code> calculan tama&ntilde;os de buffer con multiplicación <code>int</code> sin comprobar (<code>w*h*N</code>). En plataformas con <code>int</code> de 32-bit, dimensiones suficientemente grandes desbordan, asignando un buffer menor al esperado. Hoy la validaci&oacute;n <code>MaxImagePixels</code> aguas arriba (calculada en <code>int64</code> con <code>safemath</code>) mantiene dimensiones lo bastante bajas para que el desbordamiento no sea alcanzable &mdash; pero esto es un hueco de defensa en profundidad. Si alg&uacute;n decodificador de imagen alguna vez produjera dimensiones de salida mayores que las declaradas en la cabecera (patr&oacute;n visto en m&uacute;ltiples CVEs de librer&iacute;as de imagen), el buffer infradimensionado se escribir&iacute;a fuera de rango, causando corrupci&oacute;n de heap.</p>
+
+<h2>Impacto</h2>
+
+<ul>
+  <li><strong>Plataformas 64-bit:</strong> no directamente explotable con l&iacute;mites actuales (desbordamiento imposible bajo <code>MaxImagePixels</code>), pero el endurecimiento es v&aacute;lido.</li>
+  <li><strong>Plataformas 32-bit:</strong> potencialmente explotable → escritura heap out-of-bounds si existe un bug de desacople de dimensiones en el decodificador.</li>
+  <li><strong>Severidad:</strong> MEDIUM 5.9 — impacto de integridad bajo (potencial corrupci&oacute;n de heap), disponibilidad alta (panic que mata el proceso).</li>
+</ul>
+
+<h2>Causa Ra&iacute;z</h2>
+
+<p>Seis funciones primarias (m&aacute;s dos variantes) asignan buffers de píxeles con multiplicación <code>int</code> simple:</p>
+
+<pre><code class="language-go">// pkg/pdfcpu/model/image.go
+buf := make([]byte, w*h*3)    // writeRGBAImageBuf, writeNRGBAImageBuf
+buf := make([]byte, w*h*6)    // writeRGBA64ImageBuf
+buf := make([]byte, w*h)      // writeGrayImageBuf
+buf := make([]byte, 2*w*h)    // writeGray16ImageBuf
+buf := make([]byte, w*h*4)    // writeCMYKImageBuf
+</code></pre>
+
+<p>Mientras tanto <code>validateImageResourceLimits</code> correctamente usa <code>safemath.MultiplyInt64</code> y <code>MaxImagePixels = 100M</code> — as&iacute; que la validaci&oacute;n es segura pero las rutas de asignación que confían en ella no lo son, si sus entradas alguna vez vienen de una fuente distinta a la cabecera validada.</p>
+
+<h2>Prueba de Concepto</h2>
+
+<p>Confirmación mediante prueba unitaria de la aritm&eacute;tica de desbordamiento (simulación 32-bit):</p>
+
+<pre><code class="language-text">TestImageBufferOverflowDirect/overflow_rgba_32bit
+  w=26768, h=26768, multiplier=3
+  resultado 64-bit: 2149577472
+  resultado 32-bit: -2145389824 (truncado)
+  → asignación de buffer menor en sistemas 32-bit
+</code></pre>
+
+<p>Bajo l&iacute;mites actuales de <code>MaxImagePixels</code> una imagen cuadrada se limita a ~10,000×10,000 píxeles, manteniendo <code>w*h*3</code> dentro del rango 32-bit — la corrección es endurecimiento contra una regresi&oacute;n futura o desacople de decodificador, coincidiendo con la clase de bugs vistos en CVE-2026-46601 (WebP dimension mismatch) y CVE-2026-46602 (TIFF unbounded tiles).</p>
+
+<h2>Cronolog&iacute;a de Divulgaci&oacute;n</h2>
+
+<table>
+  <thead><tr><th>Fecha</th><th>Evento</th></tr></thead>
+  <tbody>
+    <tr><td>2026-09-24</td><td>Informe enviado v&iacute;a GitHub Private Vulnerability Reporting</td></tr>
+    <tr><td>2026-09-24</td><td>Aceptado por el mantenedor (hhrutter)</td></tr>
+    <tr><td>2026-09-28</td><td>Aviso publicado — GHSA-g766-88fx-58h8</td></tr>
+    <tr><td>Corregido en</td><td>pdfcpu v0.16.0</td></tr>
+  </tbody>
+</table>
+
+<h2>Correcci&oacute;n</h2>
+
+<p>Usar <code>safemath.MultiplyInt</code> para cada cómputo de tama&ntilde;o de buffer:</p>
+
+<pre><code class="language-go">// Después (seguro):
+size, err := safemath.MultiplyInt(w, h)
+if err != nil {
+    return nil, fmt.Errorf("image buffer size overflow: %w", err)
+}
+size, err = safemath.MultiplyInt(size, 3)
+if err != nil {
+    return nil, fmt.Errorf("image buffer size overflow: %w", err)
+}
+buf := make([]byte, size)
+</code></pre>
+
+<p><em>Corregido en pdfcpu v0.16.0. Aviso publicado 2026-09-28; asignación de CVE pendiente.</em></p>

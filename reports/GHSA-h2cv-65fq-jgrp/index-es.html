@@ -68,6 +68,20 @@ payload: "$(id > /tmp/pwned)"
 
 <p>Si la salida se usa en un contexto de shell (p.ej., <code>eval $(yq -o=shell -r ...)</code> o <code>source</code>), el comando se ejecuta inmediatamente. Incluso sin <code>eval</code> explícito, la salida está destinada a ser segura para shell — el flag <code>-r</code> rompe ese contrato.</p>
 
+<h2>Demostración de Prueba de Concepto</h2>
+
+<p>El siguiente video demuestra la vulnerabilidad: crear una carga maliciosa YAML, procesarla con <code>yq -o=shell -r</code>, y mostrar los metacaracteres de shell sin escape en la salida que conducen a la ejecución de comandos cuando se evalúan.</p>
+
+<video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
+  <source src="/pocs/PoC-yq-GHSA-h2cv-65fq-jgrp.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+  <a href="/pocs/PoC-yq-GHSA-h2cv-65fq-jgrp.mp4" style="color:#ff5c73;">Descargar el video</a>
+</video>
+
+<p style="margin-top:0.5rem;font-size:0.85rem;opacity:0.7;">
+  Video: inyección de comandos en yq mediante <code>-o=shell -r</code> (GHSA-h2cv-65fq-jgrp). Demo completa en la <a href="/pocs/">página de PoCs</a>.
+</p>
+
 <h2>Cronología de Divulgación</h2>
 
 <table>

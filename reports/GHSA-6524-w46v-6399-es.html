@@ -1,0 +1,103 @@
+---
+layout: reporte-es
+title: "GHSA-6524-w46v-6399 — Panics por índice fuera de rango en renderizadores de imagen PDF (pdfcpu)"
+description: "Falta de validación de entrada en renderizadores de imagen de pdfcpu causa panics por índice fuera de rango (DoS) con bpc 9..16 y lookups Indexed cortos. CVSS 6.5 MEDIUM. Corregido en v0.16.1."
+permalink: /reportes/GHSA-6524-w46v-6399-es/
+permalink_en: /reportes/GHSA-6524-w46v-6399/
+---
+
+<h1>Panics por índice fuera de rango en renderizadores de imagen</h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">DoS</span>
+  <span class="badge badge-sev-medium">CVSS 6.5 MEDIUM</span>
+  <span class="badge badge-cwe">CWE-129: Improper Validation of Array Index</span>
+  <span class="badge badge-id">pdfcpu/pdfcpu &le; v0.16.0</span>
+</div>
+
+<p>
+  <a href="https://github.com/pdfcpu/pdfcpu/security/advisories/GHSA-6524-w46v-6399">GHSA-6524-w46v-6399</a> &middot; Asignación de CVE pendiente
+</p>
+
+<h2>Resumen</h2>
+
+<p>La falta de validación de entrada en los renderizadores de imagen en escala de grises e Indexed de pdfcpu permite a un PDF creado a medida crashear cualquier aplicaci&oacute;n que extraiga o renderice im&aacute;genes. Im&aacute;genes con valores <code>BitsPerComponent</code> de 9..16 congelan el bucle de píxeles empaquetados (<code>8/bpc == 0</code> por divisi&oacute;n entera), as&iacute; que el contador de píxeles nunca avanza mientras el cursor de bytes se sale del buffer de imagen. Independientemente, im&aacute;genes de espacio de color Indexed con una paleta de lookup corta indexan fuera de rango. Ambos caminos levantan un <code>index out of range</code> panic de runtime sin recuperar, matando el proceso anfitri&oacute;n &mdash; <code>fault.Catch</code> solo recupera valores internos <code>fault.Panic</code>, no <code>runtime.Error</code>.</p>
+
+<h2>Impacto</h2>
+
+<ul>
+  <li><strong>Denegaci&oacute;n de Servicio</strong> &mdash; panic de runtime sin recuperar termina el proceso.</li>
+  <li><strong>Vector de ataque:</strong> red &mdash; PDF creado a medida pequeño v&iacute;a subida; sin autenticaci&oacute;n.</li>
+  <li><strong>&Aacute;mbito:</strong> <code>api.ExtractImages</code>, <code>RenderImage</code>, <code>WriteImage</code> — cualquier pipeline de procesamiento de imagen usando pdfcpu.</li>
+</ul>
+
+<h2>Causa Ra&iacute;z</h2>
+
+<p>En <code>pkg/pdfcpu/writeImage.go</code>, <code>renderDeviceGrayToPNG()</code> (y sus hermanos Indexed) ejecuta un bucle de píxeles empaquetados que asume <code>bpc</code> divide 8:</p>
+
+<pre><code class="language-go">// writeImage.go:393 (misma forma en 559, 606, 640, 668)
+i := 0
+for y := 0; y < im.h; y++ {
+    for x := 0; x < im.w; {
+        p := b[i]   // ← panics una vez i >= len(b)
+        for j := 0; j < 8/im.bpc && x < im.w; j++ { ... x++ }
+        i++
+    }
+}
+</code></pre>
+
+<p>Con <code>bpc > 8</code>, <code>8/im.bpc == 0</code>: el bucle interno nunca se ejecuta, <code>x</code> nunca avanza, y <code>i</code> camina fuera del final de <code>b</code>. La validación de imagen solo rechaza <code>bpc <= 0</code> m&aacute;s l&iacute;mites de tama&ntilde;o — no hay <strong>l&iacute;mite superior</strong> en <code>bpc</code>, y el error declarado <code>ErrUnsupported16BPC</code> nunca se lanza en la versi&oacute;n vulnerable.</p>
+
+<p>El segundo sumidero indexa una paleta de lookup Indexed corta sin comprobación de longitud (la rama CalRGB no realiza validaci&oacute;n alguna):</p>
+
+<pre><code class="language-go">// writeImage.go:606 — renderIndexedRGBToPNG
+l := 3 * int(ind)
+img.Set(x, y, color.NRGBA{R: lookup[l], G: lookup[l+1], B: lookup[l+2], A: alpha})
+</code></pre>
+
+<h2>Prueba de Concepto</h2>
+
+<p>Dos crasheos independientes, cada uno confirmado en tres niveles (sumidero directo, punto de entrada p&uacute;blico, PDF extremo a extremo):</p>
+
+<pre><code class="language-text"># Sumidero 1: bpc 9..16
+PDFImage{bpc: 9, w: 2, h: 1, Content: 8 bytes}
+→ panic: index out of range [8] with length 8
+
+# Sumidero 2: Indexed/CalRGB con paleta de 3 bytes, primer byte de imagen 0xFF
+[/Indexed [/CalRGB] 0 <000000>], image byte 0xFF
+→ l = 765 en un slice de 3 bytes
+→ panic: index out of range [765] with length 3
+
+# Extremo a extremo: PDF creado parsea limpiamente (api.ReadContext OK),
+# luego api.ExtractImages panics — fault.Catch no lo recupera.
+</code></pre>
+
+<p>El hallazgo se descubri&oacute; con revisi&oacute;n asistida por LLM (Strix) y se replic&oacute; independientemente con pruebas unitarias y extremo a extremo locales contra pdfcpu v0.15.0.</p>
+
+<h2>Cronolog&iacute;a de Divulgaci&oacute;n</h2>
+
+<table>
+  <thead><tr><th>Fecha</th><th>Evento</th></tr></thead>
+  <tbody>
+    <tr><td>2026-09-21</td><td>Vulnerabilidad descubierta y PoC-confirmado (reproducción local de 3 niveles)</td></tr>
+    <tr><td>2026-10-03</td><td>Informe enviado v&iacute;a GitHub Private Vulnerability Reporting</td></tr>
+    <tr><td>2026-10-04</td><td>Aviso publicado — GHSA-6524-w46v-6399</td></tr>
+    <tr><td>Corregido en</td><td>pdfcpu v0.16.1</td></tr>
+  </tbody>
+</table>
+
+<h2>Correcci&oacute;n</h2>
+
+<p>Rechazar <code>bpc > 8</code> en el punto de entrada del renderizador y validar la longitud de la paleta de lookup contra el rango de &iacute;ndice:</p>
+
+<pre><code class="language-go">// Rechazar profundidades de bit no soportadas antes del bucle empaquetado:
+if im.bpc <= 0 || im.bpc > 8 {
+    return ErrUnsupportedBitDepth
+}
+// Validar tama&ntilde;o de paleta antes de lookup indexado:
+if len(lookup) < n << bpc {
+    return errShortLookupTable
+}
+</code></pre>
+
+<p><em>Corregido en pdfcpu v0.16.1. Aviso publicado 2026-10-04; asignación de CVE pendiente.</em></p>

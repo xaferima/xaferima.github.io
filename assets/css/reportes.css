@@ -191,3 +191,22 @@
 .sev-critical { color: #ff073a; }
 .sev-high { color: #ff7a1a; }
 .sev-medium { color: #ffcd42; }
+
+.badge-video {
+  display: inline-block;
+  background: linear-gradient(145deg, rgba(255,7,58,0.3), rgba(255,7,58,0.1));
+  color: #ff5c73;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: 'Fira Code', monospace;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.5rem;
+  margin: 0.5rem 0;
+  border: 1px solid rgba(255,7,58,0.4);
+  animation: pulse-video 2s infinite;
+}
+
+@keyframes pulse-video {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,7,58,0.4); }
+  50% { box-shadow: 0 0 0 4px rgba(255,7,58,0); }
+}

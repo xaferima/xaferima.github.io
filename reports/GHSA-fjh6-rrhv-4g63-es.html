@@ -1,0 +1,89 @@
+---
+layout: reporte-es
+title: "GHSA-fjh6-rrhv-4g63 — Tablas XRef evaden límites configurados (pdfcpu)"
+description: "Las tablas de referencia cruzada tradicionales evaden los límites XRef configurados causando crecimiento de memoria sin límite (DoS) en pdfcpu. CVSS 6.5 MEDIUM. Corregido en v0.16.0."
+permalink: /reportes/GHSA-fjh6-rrhv-4g63-es/
+permalink_en: /reportes/GHSA-fjh6-rrhv-4g63/
+---
+
+<h1>Tablas XRef evaden límites configurados</h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">DoS</span>
+  <span class="badge badge-sev-medium">CVSS 6.5 MEDIUM</span>
+  <span class="badge badge-cwe">CWE-770: Allocation of Resources Without Limits</span>
+  <span class="badge badge-id">pdfcpu/pdfcpu &le; v0.15.0</span>
+</div>
+
+<p>
+  <a href="https://github.com/pdfcpu/pdfcpu/security/advisories/GHSA-fjh6-rrhv-4g63">GHSA-fjh6-rrhv-4g63</a> &middot; Asignación de CVE pendiente
+</p>
+
+<h2>Resumen</h2>
+
+<p>pdfcpu aplica l&iacute;mites de recursos de referencia cruzada configurados (<code>MaxObjectCount</code>, <code>MaxXRefEntries</code>) al parsear streams XRef (PDF 1.5+), pero el camino de c&oacute;digo heredado para tablas XRef tradicionales (PDF 1.4 y anteriores) nunca valida el recuento de objetos de la subsecci&oacute;n. Un PDF creado a medida que declara un <code>objCount</code> enorme con entradas coincidentes fuerza al mapa de referencia cruzada a crecer sin l&iacute;mite, agotando la memoria del proceso y crasheando cualquier aplicaci&oacute;n anfitriona.</p>
+
+<h2>Impacto</h2>
+
+<ul>
+  <li><strong>Denegaci&oacute;n de Servicio</strong> v&iacute;a agotamiento de memoria &mdash; proceso OOM o degradaci&oacute;n severa.</li>
+  <li><strong>Vector de ataque:</strong> red &mdash; PDF malicioso v&iacute;a subida o adjunto.</li>
+  <li><strong>Bypass del control intencionado:</strong> la configuración de l&iacute;mites de recursos no se aplica silenciosamente en el camino heredado.</li>
+  <li><strong>&Aacute;mbito:</strong> cualquier aplicaci&oacute;n que use pdfcpu para procesar PDFs no confiados.</li>
+</ul>
+
+<h2>Causa Ra&iacute;z</h2>
+
+<p>En <code>pkg/pdfcpu/read.go</code>, <code>parseXRefTableSubSection()</code> lee el recuento de objetos de la subsecci&oacute;n con <code>strconv.Atoi</code> y nunca lo comprueba contra los l&iacute;mites configurados. Cada entrada xref v&aacute;lida se inserta en el mapa de referencia cruzada, que crece sin l&iacute;mite:</p>
+
+<pre><code class="language-go">// pkg/pdfcpu/read.go:445 — sin comprobación de límite
+objCount, err := strconv.Atoi(fields[1])
+
+// read.go:424 — cada entrada hace crecer el mapa
+xRefTable.Table[objNr] = &entry
+</code></pre>
+
+<p>Por contraste, los streams XRef aplican <code>MaxObjectCount = 10M</code> en <code>xRefStreamSize()</code> (<code>model/parse.go</code>) &mdash; el camino de tablas tradicionales simplemente carece de la comprobaci&oacute;n equivalente.</p>
+
+<h2>Prueba de Concepto</h2>
+
+<p>Un PDF creado con una tabla XRef tradicional:</p>
+
+<pre><code class="language-text">xref
+0 100000000        ← objCount = 100M, nunca validado
+0000000000 65535 f
+0000000010 00000 n
+...                ← el atacante suministra entradas coincidentes
+trailer << /Size 100000001 /Root 1 0 R >>
+</code></pre>
+
+<p>Cada entrada de ~30 bytes crea una entrada de mapa que cuesta ~128 bytes de overhead de mapa Go. 100M entradas → crecimiento de memoria multi-GB → OOM kill. Restricciones mitigantes: el bucle se detiene en la primera l&iacute;nea sin 3 campos, y el atacante debe suministrar suficientes entradas bien formadas para igualar <code>objCount</code>, as&iacute; que el ataque requiere un archivo grande (escala GB) &mdash; pero la amplificaci&oacute;n de memoria es aproximadamente 4&times;.</p>
+
+<h2>Cronolog&iacute;a de Divulgaci&oacute;n</h2>
+
+<table>
+  <thead><tr><th>Fecha</th><th>Evento</th></tr></thead>
+  <tbody>
+    <tr><td>2026-09-18</td><td>Informe enviado v&iacute;a GitHub Private Vulnerability Reporting</td></tr>
+    <tr><td>2026-09-18</td><td>Aceptado por el mantenedor; retitulado <em>"Traditional cross-reference tables bypass configured XRef limits"</em></td></tr>
+    <tr><td>2026-09-28</td><td>Aviso publicado — GHSA-fjh6-rrhv-4g63</td></tr>
+    <tr><td>Corregido en</td><td>pdfcpu v0.16.0</td></tr>
+  </tbody>
+</table>
+
+<h2>Correcci&oacute;n</h2>
+
+<p>Validar <code>objCount</code> contra <code>MaxObjectCount</code> en el camino de tablas tradicionales, replicando la aplicaci&oacute;n de XRef-stream:</p>
+
+<pre><code class="language-go">// Después (seguro):
+objCount, err := strconv.Atoi(fields[1])
+if err != nil {
+    return "", err
+}
+if objCount > limits.MaxObjectCount {
+    return "", fmt.Errorf("xref subsection objCount %d exceeds limit %d",
+        objCount, limits.MaxObjectCount)
+}
+</code></pre>
+
+<p><em>Corregido en pdfcpu v0.16.0. Aviso publicado 2026-09-28; asignación de CVE pendiente.</em></p>

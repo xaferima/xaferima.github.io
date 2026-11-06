@@ -11,7 +11,7 @@ permalink: /pocs/
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>PoC Demos · {{ site.title }}</title>
-  <meta name="description" content="Live proof-of-concept demos of coordinated vulnerability disclosures — CVE-2026-105080 RCE and more.">
+  <meta name="description" content="Live proof-of-concept demos of coordinated vulnerability disclosures — CVE-2026-105080, GHSA-h2cv-65fq-jgrp (yq), GHSA-9c7h-xjrp-8gh3 (SnapOtter).">
 
   <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/favicon/apple-touch-icon.png" | prepend: site.baseurl }}">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ "/assets/favicon/favicon-32x32.png" | prepend: site.baseurl }}">
@@ -54,49 +54,124 @@ permalink: /pocs/
         reported privately to the maintainer and fixed before publication.
       </p>
 
-      <h2>PoC — CVE-2026-105080: RCE via calibre .recipe</h2>
+      <section id="cve-2026-105080">
+        <h2>PoC — CVE-2026-105080: RCE via calibre .recipe (ConvertX)</h2>
 
-      <div class="meta-badges">
-        <span class="badge badge-tipo">RCE</span>
-        <span class="badge badge-sev-critical">CVSS 9.9</span>
-        <span class="badge badge-cwe">CWE-94: Code Injection</span>
-        <span class="badge badge-id">ConvertX ≤ v0.18.0 · Fixed v0.19.0</span>
-      </div>
+        <div class="meta-badges">
+          <span class="badge badge-tipo">RCE</span>
+          <span class="badge badge-sev-critical">CVSS 9.9</span>
+          <span class="badge badge-cwe">CWE-94: Code Injection</span>
+          <span class="badge badge-id">ConvertX ≤ v0.18.0 · Fixed v0.19.0</span>
+        </div>
 
-      <p>
-        Registration, upload of a malicious calibre <code>.recipe</code> file, conversion trigger
-        via <code>ebook-convert</code>, root shell inside the container, and <code>JWT_SECRET</code>
-        exfiltration from the process environment.
-      </p>
+        <p>
+          Registration, upload of a malicious calibre <code>.recipe</code> file, conversion trigger
+          via <code>ebook-convert</code>, root shell inside the container, and <code>JWT_SECRET</code>
+          exfiltration from the process environment.
+        </p>
 
-      <video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
-        <source src="/pocs/DemoRCE-CVE-2026-105080.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-        <a href="/pocs/DemoRCE-CVE-2026-105080.mp4" style="color:#ff5c73;">Download the video</a>
-      </video>
+        <video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
+          <source src="/pocs/DemoRCE-CVE-2026-105080.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+          <a href="/pocs/DemoRCE-CVE-2026-105080.mp4" style="color:#ff5c73;">Download the video</a>
+        </video>
 
-      <p style="margin-top:1rem;font-size:0.85rem;opacity:0.7;">
-        Environment: the project's default Docker Compose deployment (v0.18.0). The leaked
-        <code>JWT_SECRET</code> is the hardcoded example value from <code>compose.yaml</code> —
-        part of the reported vulnerability.
-      </p>
+        <p style="margin-top:1rem;font-size:0.85rem;opacity:0.7;">
+          Environment: the project's default Docker Compose deployment (v0.18.0). The leaked
+          <code>JWT_SECRET</code> is the hardcoded example value from <code>compose.yaml</code> —
+          part of the reported vulnerability.
+        </p>
 
-      <p style="margin-top:0.5rem;">
-        Full technical analysis → <a href="/reportes/CVE-2026-105080/">CVE-2026-105080 writeup</a>
-      </p>
+        <p style="margin-top:0.5rem;">
+          Full technical analysis → <a href="/reportes/CVE-2026-105080/">CVE-2026-105080 writeup</a>
+        </p>
+      </section>
 
-      <h2 style="margin-top:2.5rem;">Additional RCE PoC demo</h2>
+      <section id="ghsa-h2cv-65fq-jgrp" style="margin-top:2.5rem;">
+        <h2>PoC — GHSA-h2cv-65fq-jgrp: Command Injection via -o=shell -r (yq)</h2>
 
-      <p>
-        Additional remote-code-execution proof-of-concept demo (container breakout / command
-        execution in a vulnerable conversion service).
-      </p>
+        <div class="meta-badges">
+          <span class="badge badge-tipo">Command Injection</span>
+          <span class="badge badge-sev-high">CVSS 7.8 HIGH</span>
+          <span class="badge badge-cwe">CWE-78: OS Command Injection</span>
+          <span class="badge badge-id">mikefarah/yq ≤ v4.54.1 · Fixed v4.54.2</span>
+        </div>
 
-      <video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
-        <source src="/pocs/PocRCE.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-        <a href="/pocs/PocRCE.mp4" style="color:#ff5c73;">Download the video</a>
-      </video>
+        <p>
+          Demonstration of the command injection in yq's shell output format (<code>-o=shell</code>).
+          When <code>-r</code> (raw output) is combined with <code>-o=shell</code>, unquoted strings
+          containing shell metacharacters are emitted literally — piping to <code>sh</code> or using
+          <code>eval</code> on the output executes arbitrary commands. The video shows the vulnerable
+          <code>yq -o=shell -r '.key'</code> pattern, the injected payload via YAML value, and
+          successful command execution on the host.
+        </p>
+
+        <video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
+          <source src="/pocs/PoC-yq-GHSA-h2cv-65fq-jgrp.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+          <a href="/pocs/PoC-yq-GHSA-h2cv-65fq-jgrp.mp4" style="color:#ff5c73;">Download the video</a>
+        </video>
+
+        <p style="margin-top:1rem;font-size:0.85rem;opacity:0.7;">
+          Affected: mikefarah/yq ≤ v4.54.1. Fixed in v4.54.2 (2026-10-23). The fix quotes all shell
+          output format values. Tested on Linux x86_64.
+        </p>
+
+        <p style="margin-top:0.5rem;">
+          Full technical analysis → <a href="/reportes/GHSA-h2cv-65fq-jgrp/">yq GHSA-h2cv-65fq-jgrp writeup</a>
+        </p>
+      </section>
+
+      <section id="ghsa-9c7h-xjrp-8gh3" style="margin-top:2.5rem;">
+        <h2>PoC — GHSA-9c7h-xjrp-8gh3: XSS in SnapOtter (2 demos)</h2>
+
+        <div class="meta-badges">
+          <span class="badge badge-tipo">XSS</span>
+          <span class="badge badge-sev-high">CVSS 7.1 HIGH</span>
+          <span class="badge badge-cwe">CWE-79: Cross-site Scripting</span>
+          <span class="badge badge-id">SnapOtter ≤ v2.2.0 · Fixed v2.3.0</span>
+        </div>
+
+        <p>
+          Two proof-of-concept demonstrations for the reflected XSS vulnerability in SnapOtter's
+          <code>/api/v1/shorten</code> endpoint. The <code>url</code> parameter is reflected
+          unsanitized in the JSON response, enabling script execution when the API response is
+          consumed by a vulnerable frontend.
+        </p>
+
+        <h3 style="margin-top:1.5rem;">Full exploit walkthrough (1:41)</h3>
+        <p>
+          End-to-end exploitation: craft malicious URL payload, trigger via API, demonstrate
+          JavaScript execution in victim context, exfiltrate session token, achieve account takeover.
+        </p>
+
+        <video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
+          <source src="/pocs/PoC-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+          <a href="/pocs/PoC-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4" style="color:#ff5c73;">Download the video</a>
+        </video>
+
+        <h3 style="margin-top:1.5rem;">Minimal XSS payload execution (7 s)</h3>
+        <p>
+          Short clip showing the bare XSS payload <code>javascript:alert(1)</code> executing
+          in the response context — confirms the reflection point without the full exploit chain.
+        </p>
+
+        <video controls preload="metadata" style="width:100%;border-radius:0.75rem;border:1px solid rgba(255,7,58,0.3);background:#000;">
+          <source src="/pocs/XSS-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+          <a href="/pocs/XSS-SnapOtter-GHSA-9c7h-xjrp-8gh3.mp4" style="color:#ff5c73;">Download the video</a>
+        </video>
+
+        <p style="margin-top:1rem;font-size:0.85rem;opacity:0.7;">
+          Affected: SnapOtter ≤ v2.2.0. Fixed in v2.3.0 (2026-11-03). The fix applies proper
+          output encoding on the <code>url</code> parameter in the shorten endpoint response.
+        </p>
+
+        <p style="margin-top:0.5rem;">
+          Full technical analysis → <a href="/reportes/GHSA-9c7h-xjrp-8gh3/">SnapOtter GHSA-9c7h-xjrp-8gh3 writeup</a>
+        </p>
+      </section>
     </article>
   </main>
 
