@@ -27,6 +27,11 @@
                   {% endfor %}
                 </div>
               {% endif %}
+              {% if event.video %}
+                <div style="margin-top:0.5rem;">
+                  <a href="{{event.video}}" target="_blank" rel="noreferrer" style="color:#ff073a;font-weight:bold;text-decoration:none;">▶ Watch the recording</a>
+                </div>
+              {% endif %}
             </div>
           </div>
         </li>
@@ -53,6 +58,11 @@
                   {% for tag in event.tags %}
                     <span class="tag neumorphism-card">{{tag.tag}}</span>
                   {% endfor %}
+                </div>
+              {% endif %}
+              {% if event.video %}
+                <div style="margin-top:0.5rem;">
+                  <a href="{{event.video}}" target="_blank" rel="noreferrer" style="color:#ff073a;font-weight:bold;text-decoration:none;">▶ Watch the recording</a>
                 </div>
               {% endif %}
             </div>
