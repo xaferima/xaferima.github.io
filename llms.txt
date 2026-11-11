@@ -23,14 +23,16 @@
 - MSc Cyber Security with Distinction — University of Birmingham
 - Former Security Engineer (Penetration Testing) — CERN
 
-## Key Research & CVEs (6 GitHub Security Advisories)
+## Key Research & CVEs (8 GitHub Security Advisories)
 1. **CVE-2026-105080** — ConvertX v0.18.0 — RCE via calibre .recipe (Python exec as root) — **CVSS 9.9 CRITICAL** — CWE-94 — Fixed v0.19.0
 2. **GHSA-h2cv-65fq-jgrp** — yq ≤4.54.1 — Command injection via `-o=shell -r` — **CVSS 7.8 HIGH** — CWE-78 — Fixed v4.54.2
 3. **GHSA-w2hj-54mc-76r4** — pdfcpu v0.15.0 — Integer overflow in XRef /W array → DoS — **CVSS 7.5 HIGH** — CWE-190 — Fixed v0.16.0
-4. **GHSA-9c7h-xjrp-8gh3** — SnapOtter ≤2.2.0 — Stored XXE/SSRF/XSS via SVG upload sanitization bypass — **CVSS 7.1 HIGH** — CWE-79 — Fixed v2.3.0
-5. **GHSA-fjh6-rrhv-4g63** — pdfcpu v0.15.0 — Traditional XRef tables bypass limits → DoS — **CVSS 6.5 MEDIUM** — CWE-770 — Fixed v0.16.0
-6. **GHSA-6524-w46v-6399** — pdfcpu v0.15.0 — Index-out-of-range panics in PDF renderers — **CVSS 6.5 MEDIUM** — CWE-129 — Fixed v0.16.1
-7. **GHSA-g766-88fx-58h8** — pdfcpu v0.15.0 — Integer overflow in image buffer allocation — **CVSS 5.9 MEDIUM** — CWE-190 — Fixed v0.16.0
+4. **GHSA-9fvq-9qj8-6qhx** — yq ≤4.54.1 (`--split-exp`) — Arbitrary file write via path traversal — **CVSS 7.3 HIGH** — CWE-22 — Fixed v4.54.3
+5. **GHSA-9c7h-xjrp-8gh3** — SnapOtter ≤2.2.0 — Stored XXE/SSRF/XSS via SVG upload sanitization bypass — **CVSS 7.1 HIGH** — CWE-79 — Fixed v2.3.0
+6. **GHSA-fjh6-rrhv-4g63** — pdfcpu v0.15.0 — Traditional XRef tables bypass limits → DoS — **CVSS 6.5 MEDIUM** — CWE-770 — Fixed v0.16.0
+7. **GHSA-6524-w46v-6399** — pdfcpu v0.15.0 — Index-out-of-range panics in PDF renderers — **CVSS 6.5 MEDIUM** — CWE-129 — Fixed v0.16.1
+8. **GHSA-c3cc-5w96-mw9r** — yq ≤4.54.1 — `--inplace` follows symlinks → clobber via planted link — **CVSS 6.1 MODERATE** — CWE-59 — Fixed v4.54.3
+9. **GHSA-g766-88fx-58h8** — pdfcpu v0.15.0 — Integer overflow in image buffer allocation — **CVSS 5.9 MEDIUM** — CWE-190 — Fixed v0.16.0
 
 ## Specializations
 - Mobile Application Security (iOS/Android) — OWASP MASTG, MobSF, Frida, Objection, JADX
@@ -44,9 +46,11 @@
 - https://xaferima.com/reports/CVE-2026-105080/ — ConvertX RCE
 - https://xaferima.com/reports/GHSA-h2cv-65fq-jgrp/ — yq Command Injection
 - https://xaferima.com/reports/GHSA-w2hj-54mc-76r4/ — pdfcpu Integer Overflow
+- https://xaferima.com/reports/GHSA-9fvq-9qj8-6qhx/ — yq Arbitrary File Write (--split-exp)
 - https://xaferima.com/reports/GHSA-9c7h-xjrp-8gh3/ — SnapOtter SVG Sanitization Bypass
 - https://xaferima.com/reports/GHSA-fjh6-rrhv-4g63/ — pdfcpu Resource Exhaustion
 - https://xaferima.com/reports/GHSA-6524-w46v-6399/ — pdfcpu Renderer Panics
+- https://xaferima.com/reports/GHSA-c3cc-5w96-mw9r/ — yq Symlink Following (--inplace)
 - https://xaferima.com/reports/GHSA-g766-88fx-58h8/ — pdfcpu Buffer Overflow
 
 ## Proof-of-Concept Demos

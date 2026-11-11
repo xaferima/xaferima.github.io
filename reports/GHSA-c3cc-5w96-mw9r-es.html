@@ -1,0 +1,106 @@
+---
+layout: reporte-es
+title: "GHSA-c3cc-5w96-mw9r — yq --inplace sigue symlinks al actualizar (mikefarah/yq)"
+description: "Seguimiento de symlinks en yq ≤4.54.1 mediante el flag --inplace — un symlink plantado redirige la escritura in-place a cualquier archivo alcanzable por el usuario de yq. CVSS 6.1 MODERATE. Corregido en v4.54.3."
+permalink: /reportes/GHSA-c3cc-5w96-mw9r-es/
+permalink_en: /reports/GHSA-c3cc-5w96-mw9r/
+---
+
+<h1><code>--inplace</code> sigue symlinks al actualizar</h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">Seguimiento de Symlinks</span>
+  <span class="badge badge-sev-medium">CVSS 6.1 MODERATE</span>
+  <span class="badge badge-cwe">CWE-59: Improper Link Resolution Before File Access</span>
+  <span class="badge badge-id">mikefarah/yq ≤ v4.54.1</span>
+</div>
+
+<p>
+  <a href="https://github.com/mikefarah/yq/security/advisories/GHSA-c3cc-5w96-mw9r">GHSA-c3cc-5w96-mw9r</a> · Asignación de CVE pendiente
+</p>
+
+<h2>Resumen</h2>
+
+<p>Al escribir con <code>-i</code> / <code>--inplace</code>, yq resuelve y sigue los symlinks en lugar de reemplazarlos. Un symlink plantado en el árbol que se procesa (p. ej. en un PR, un repo de configs compartido o un proyecto descargado) redirige la escritura in-place a cualquier archivo alcanzable por el usuario de yq — el archivo víctima es sobrescrito con el documento procesado controlado por el atacante. Esto diverge del estándar del ecosistema (<code>sed -i</code> reemplaza el symlink), no tiene opt-out y no está documentado en ninguna parte.</p>
+
+<h2>Impacto</h2>
+
+<ul>
+  <li><strong>Clobber vía symlink plantado</strong> — sobrescritura de archivos del operador con contenido controlado por el atacante en cualquier ruta alcanzable por el usuario de yq.</li>
+  <li><strong>Vector de ataque:</strong> local — un symlink <code>.yml</code>/<code>.yaml</code> malicioso dentro de un repo o árbol de configs procesado; no se cruza ningún límite de privilegios (la escritura corre con los propios privilegios del usuario de yq, pero la elección del archivo y el contenido los controla el atacante).</li>
+  <li><strong>Escalación:</strong> sobrescribir dotfiles, scripts o definiciones de workflows (<code>~/.bashrc</code>, <code>~/.ssh/authorized_keys</code>, <code>.github/workflows/*.yml</code>, crontab) lleva a ejecución de código en la siguiente corrida; archivos críticos también pueden ser corrompidos.</li>
+</ul>
+
+<h2>Causa Raíz</h2>
+
+<p><code>pkg/yqlib/file_utils.go:10-17</code> (<code>tryRenameFile</code>): la rama del symlink es intencional — al escribir in-place, yq resuelve y sigue el symlink, escribiendo el contenido procesado a través de él. No hay flag opt-out, ni advertencia en la ayuda del flag, ni documentación del riesgo.</p>
+
+<pre><code class="language-go">// pkg/yqlib/file_utils.go:10-17 — tryRenameFile
+// Rama de symlink: yq sigue el enlace en lugar de reemplazarlo
+// (sed -i reemplaza el symlink; yq escribe a través de él)
+</code></pre>
+
+<p>Divergencia de comportamiento: <code>sed -i</code> reemplaza el symlink con un archivo regular nuevo (rompiendo el enlace, protegiendo el archivo víctima); <code>sponge</code> y <code>ex</code> siguen symlinks como yq — pero el comportamiento de esas herramientas es conocido y documentado, mientras que yq ni documenta ni protege su decisión. El advisory también lista CWE-22 y CWE-73 (control externo del nombre o ruta de archivo) como debilidades relacionadas.</p>
+
+<h2>Prueba de Concepto</h2>
+
+<p>Probado contra yq v4.54.1 (commit <code>504fc38780cc46be8444ea1b72fb55919fc0bfb0</code>), binario compilado desde el código etiquetado. 3 capturas adjuntas al advisory.</p>
+
+<pre><code class="language-bash"># Clobber a través de un symlink (directorio de trabajo /tmp/yq-vn044/)
+$ ls -la
+[lrwxrwxrwx  link.yml -> victim.txt
+ -rw-rw-r--  victim.txt]
+
+$ cat victim.txt
+[app: production
+ key: SECRET_VALUE]
+
+$ ./yq -i '.key = "PWNED_BY_YQ"' link.yml
+[exit 0]
+
+$ ls -la
+[lrwxrwxrwx  link.yml -> victim.txt]      ← SYMLINK SIGUE SIENDO SYMLINK (yq lo siguió)
+
+$ cat victim.txt
+[app: production
+ key: PWNED_BY_YQ]                        ← ARCHIVO REAL SOBRESCRITO A TRAVÉS DEL SYMLINK
+
+# Variante: symlink plantado apuntando fuera del árbol procesado
+$ ln -s ../outside2/important.yml repo/ci-config.yml
+$ ./yq -i '.db_password = "PWNED"' repo/ci-config.yml
+[exit 0]
+$ cat outside2/important.yml
+[db_password: PWNED]                      ← SOBRESCRITO FUERA DEL ÁRBOL DEL REPO
+
+# Contraste con sed -i (estándar del ecosistema: reemplazar, no seguir)
+$ sed -i 's/SECRET_VALUE/PWNED_BY_SED/' link2.yml
+$ ls -la link2.yml victim2.txt
+[-rw-rw-r--  link2.yml]                   ← SYMLINK DESTRUIDO, REEMPLAZADO POR ARCHIVO REGULAR
+$ cat victim2.txt
+[app: production
+ key: SECRET_VALUE]                       ← VÍCTIMA INTACTA
+</code></pre>
+
+<h2>Cronología de Divulgación</h2>
+
+<table>
+  <thead><tr><th>Fecha</th><th>Evento</th></tr></thead>
+  <tbody>
+    <tr><td>2026-10-23</td><td>Reportado como Issue B del advisory combinado GHSA-c3cc-5w96-mw9r (junto al issue de <code>--split-exp</code>); aceptado por el mantenedor el mismo día</td></tr>
+    <tr><td>2026-11-05</td><td>Issue A movido al advisory independiente GHSA-9fvq-9qj8-6qhx; este advisory quedó limitado a <code>--inplace</code></td></tr>
+    <tr><td>2026-11-09</td><td>Advisory publicado; corrección lanzada en yq v4.54.3</td></tr>
+    <tr><td>Pendiente</td><td>Asignación de CVE (solicitud debida ahora que existe corrección pública)</td></tr>
+  </tbody>
+</table>
+
+<h2>Corrección</h2>
+
+<p>yq v4.54.3 reemplaza los symlinks en lugar de escribir a través de ellos:</p>
+
+<pre><code class="language-text">- Fixed `--inplace` to reject direct updates to read-only files and replace
+  symbolic links instead of modifying their targets. (#2973)
+</code></pre>
+
+<p>El advisory también sugiere un diseño seguro por defecto (reemplazar symlinks como hace <code>sed -i</code>) o un flag opt-in explícito <code>--preserve-symlinks</code> con advertencia en la ayuda y la documentación. Mitigación en versiones vulnerables: no ejecutar <code>yq -i</code> sobre árboles que contengan symlinks no confiables (procesar una copia, o pre-resolver/eliminar los symlinks).</p>
+
+<p><em>Corregido en yq v4.54.3 (2026-11-09). Advisory publicado 2026-11-09; asignación de CVE pendiente.</em></p>

@@ -48,7 +48,7 @@ permalink: /reportes/
   <script src="{{ "/assets/js/app.min.js" | prepend: site.baseurl }}"></script>
 
   <!-- JSON-LD: CollectionPage -->
-  <script type="application/ld+json>
+  <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -64,9 +64,11 @@ permalink: /reportes/
       {"@type": "TechArticle", "name": "CVE-2026-105080 — RCE vía calibre .recipe en ConvertX", "url": "https://xaferima.com/reportes/CVE-2026-105080-es/"},
       {"@type": "TechArticle", "name": "GHSA-h2cv-65fq-jgrp — Inyección de Comandos en yq", "url": "https://xaferima.com/reportes/GHSA-h2cv-65fq-jgrp-es/"},
       {"@type": "TechArticle", "name": "GHSA-w2hj-54mc-76r4 — Desbordamiento de Entero en pdfcpu", "url": "https://xaferima.com/reportes/GHSA-w2hj-54mc-76r4-es/"},
+      {"@type": "TechArticle", "name": "GHSA-9fvq-9qj8-6qhx — Escritura Arbitraria en yq", "url": "https://xaferima.com/reportes/GHSA-9fvq-9qj8-6qhx-es/"},
       {"@type": "TechArticle", "name": "GHSA-9c7h-xjrp-8gh3 — Bypass de Sanitización SVG en SnapOtter", "url": "https://xaferima.com/reportes/GHSA-9c7h-xjrp-8gh3-es/"},
       {"@type": "TechArticle", "name": "GHSA-fjh6-rrhv-4g63 — Agotamiento de Recursos en pdfcpu", "url": "https://xaferima.com/reportes/GHSA-fjh6-rrhv-4g63-es/"},
       {"@type": "TechArticle", "name": "GHSA-6524-w46v-6399 — Pánicos en Renderizadores pdfcpu", "url": "https://xaferima.com/reportes/GHSA-6524-w46v-6399-es/"},
+      {"@type": "TechArticle", "name": "GHSA-c3cc-5w96-mw9r — Seguimiento de Symlinks en yq", "url": "https://xaferima.com/reportes/GHSA-c3cc-5w96-mw9r-es/"},
       {"@type": "TechArticle", "name": "GHSA-g766-88fx-58h8 — Desbordamiento de Búfer en pdfcpu", "url": "https://xaferima.com/reportes/GHSA-g766-88fx-58h8-es/"}
     ]
   }
@@ -147,6 +149,15 @@ permalink: /reportes/
           <span class="tile-more">Leer más →</span>
         </a>
 
+        <a class="reporte-tile" href="/reportes/GHSA-9fvq-9qj8-6qhx-es/">
+          <span class="tile-tipo">Escritura Arbitraria</span>
+          <div class="tile-id">GHSA-9fvq-9qj8-6qhx · CVE pendiente</div>
+          <div class="tile-prod">mikefarah/yq</div>
+          <div class="tile-desc">Escritura arbitraria vía <code>--split-exp</code> — nombres de archivo controlados por el documento llegan sin sanitizar a <code>os.MkdirAll</code>/<code>os.Create</code>.</div>
+          <div class="tile-sev sev-high">CVSS 7.3 HIGH</div>
+          <span class="tile-more">Leer más →</span>
+        </a>
+
         <a class="reporte-tile" href="/reportes/GHSA-9c7h-xjrp-8gh3-es/">
           <span class="tile-tipo">XXE/SSRF/XSS</span>
           <div class="tile-id">GHSA-9c7h-xjrp-8gh3 · CVE pendiente</div>
@@ -172,6 +183,15 @@ permalink: /reportes/
           <div class="tile-prod">pdfcpu/pdfcpu</div>
           <div class="tile-desc">Pánicos por índice fuera de rango en renderizadores de imágenes PDF (<code>bpc</code> 9..16, búsqueda Indexed corta).</div>
           <div class="tile-sev sev-medium">CVSS 6.5 MEDIUM</div>
+          <span class="tile-more">Leer más →</span>
+        </a>
+
+        <a class="reporte-tile" href="/reportes/GHSA-c3cc-5w96-mw9r-es/">
+          <span class="tile-tipo">Symlink Attack</span>
+          <div class="tile-id">GHSA-c3cc-5w96-mw9r · CVE pendiente</div>
+          <div class="tile-prod">mikefarah/yq</div>
+          <div class="tile-desc"><code>--inplace</code> sigue symlinks en lugar de reemplazarlos — un symlink plantado redirige la escritura a cualquier archivo alcanzable.</div>
+          <div class="tile-sev sev-medium">CVSS 6.1 MODERATE</div>
           <span class="tile-more">Leer más →</span>
         </a>
 

